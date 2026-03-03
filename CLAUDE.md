@@ -24,7 +24,7 @@ SPEC.md            # Detailed specification
 - Git-native: JSONL is diffable/mergeable, `merge=union` gitattribute
 - All CLI commands support `--json` flag
 - Prompts are composed via sections and inheritance, not duplicated
-- `cn emit` renders to plain `.md` for downstream consumption
+- `cn emit` renders to plain `.md` (or `.ts` when `emitAs` ends in `.ts`) for downstream consumption
 
 <!-- mulch:start -->
 ## Project Expertise (Mulch)

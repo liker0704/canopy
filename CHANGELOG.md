@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-03-03
+
+### Added
+- **TypeScript emit support** — when `emitAs` is set to a `.ts` filename, `cn emit` renders a TypeScript module (`export const NAME = \`...\``) instead of markdown
+  - `toExportName()` converts prompt names to `UPPER_SNAKE_CASE` export names
+  - `escapeTemplateLiteral()` escapes backticks, `${...}` expressions, and backslashes in template literals
+  - Frontmatter is excluded from `.ts` output (TypeScript exports are pure prompt content)
+  - `--check`, skip-if-unchanged, and `--dry-run` all work with `.ts` files
+- Tests for TypeScript emit: export name conversion, template literal escaping, `.ts` file generation, stale detection, and skip-unchanged behavior (7 tests)
+
 ## [0.2.0] - 2026-02-25
 
 ### Added

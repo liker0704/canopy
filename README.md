@@ -55,10 +55,10 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 | Command | Description |
 |---------|-------------|
 | `cn init` | Initialize `.canopy/` in current directory |
-| `cn create --name <text>` | Create a new prompt (`--description`, `--extends`, `--tag`, `--status`, `--emit-dir`, `--fm`, `--section name=body`) |
+| `cn create --name <text>` | Create a new prompt (`--description`, `--extends`, `--tag`, `--status`, `--emit-dir`, `--emit-as`, `--fm`, `--section name=body`) |
 | `cn show <name>[@version]` | Show prompt record |
 | `cn list` | List prompts (`--tag`, `--status`, `--extends` filters) |
-| `cn update <name>` | Update a prompt — creates new version (`--section`, `--add-section`, `--remove-section`, `--tag`, `--untag`, `--description`, `--schema`, `--extends`, `--emit-dir`, `--fm`, `--remove-fm`, `--status`, `--name`) |
+| `cn update <name>` | Update a prompt — creates new version (`--section`, `--add-section`, `--remove-section`, `--tag`, `--untag`, `--description`, `--schema`, `--extends`, `--emit-dir`, `--emit-as`, `--fm`, `--remove-fm`, `--status`, `--name`) |
 | `cn archive <name>` | Soft-delete a prompt |
 | `cn render <name>[@version]` | Resolve inheritance, output sections (`--format md\|json`) |
 | `cn tree <name>` | Show inheritance tree |
@@ -71,7 +71,7 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 
 | Command | Description |
 |---------|-------------|
-| `cn emit <name>` | Render and write prompt to file (`--out`, `--force`) |
+| `cn emit <name>` | Render and write prompt to file (`--out`, `--force`); emits `.ts` when `emitAs` ends in `.ts` |
 | `cn emit --all` | Emit all active prompts (`--out-dir`, `--force`, `--dry-run`) |
 | `cn emit --check` | Check if emitted files are up to date (CI use) |
 
@@ -106,7 +106,7 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 
 ## Architecture
 
-Canopy stores prompts as versioned JSONL records in `.canopy/prompts.jsonl`, with validation schemas in `schemas.jsonl` and project config in `config.yaml`. Prompts are composed via single inheritance — a child inherits all sections from its parent and can override, append, or remove individual sections (up to 5 levels deep with circular reference detection). The `cn emit` pipeline renders resolved prompts to plain `.md` files for downstream agent consumption. Advisory file locks and atomic writes ensure concurrent-safe access. See [CLAUDE.md](CLAUDE.md) for full technical details.
+Canopy stores prompts as versioned JSONL records in `.canopy/prompts.jsonl`, with validation schemas in `schemas.jsonl` and project config in `config.yaml`. Prompts are composed via single inheritance — a child inherits all sections from its parent and can override, append, or remove individual sections (up to 5 levels deep with circular reference detection). The `cn emit` pipeline renders resolved prompts to plain `.md` files (or `.ts` modules when `emitAs` ends in `.ts`) for downstream agent consumption. Advisory file locks and atomic writes ensure concurrent-safe access. See [CLAUDE.md](CLAUDE.md) for full technical details.
 
 ## How It Works
 
@@ -114,7 +114,7 @@ Canopy stores prompts as versioned JSONL records in `.canopy/prompts.jsonl`, wit
 1. cn init                → Creates .canopy/ with JSONL files and config
 2. cn create / cn update  → Prompts stored as versioned JSONL records
 3. cn render              → Inheritance resolved, sections composed
-4. cn emit                → Plain .md files written for agent consumption
+4. cn emit                → Plain .md (or .ts) files written for agent consumption
 5. git push               → Teammates get the same prompts, diffable in PRs
 ```
 
@@ -164,7 +164,7 @@ Canopy uses advisory file locking and atomic writes — the same patterns proven
 - **Concurrent-safe** — Advisory locks + atomic writes
 - **Git-native** — `merge=union` handles parallel merges, dedup on read
 - **Prompts are composed** — Inheritance eliminates duplication
-- **Emit to plain files** — Canopy is source of truth, tools consume `.md`
+- **Emit to plain files** — Canopy is source of truth, tools consume `.md` or `.ts`
 
 ## Project Structure
 
