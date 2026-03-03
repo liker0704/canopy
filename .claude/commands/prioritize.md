@@ -1,3 +1,7 @@
+---
+name: prioritize
+---
+
 ## description
 
 Analyze all open issues across GitHub Issues and Seeds, cross-reference with codebase health, and recommend the top ~5 issues to tackle next.
