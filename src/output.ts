@@ -6,7 +6,19 @@ export function setQuiet(v: boolean): void {
 	_quiet = v;
 }
 
+export function isQuiet(): boolean {
+	return _quiet;
+}
+
 export function jsonOut(data: unknown): void {
+	if (_quiet) {
+		const isError =
+			data != null &&
+			typeof data === "object" &&
+			"success" in data &&
+			(data as Record<string, unknown>).success === false;
+		if (!isError) return;
+	}
 	console.log(JSON.stringify(data, null, 2));
 }
 

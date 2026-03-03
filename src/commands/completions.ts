@@ -5,7 +5,7 @@
  */
 
 import { Command } from "commander";
-import { errorOut, jsonOut } from "../output.ts";
+import { errorOut, isQuiet, jsonOut } from "../output.ts";
 import { ExitError } from "../types.ts";
 
 interface FlagDef {
@@ -603,6 +603,8 @@ export function completionsCommand(args: string[], json = false): void {
 			throw new ExitError(1);
 	}
 
-	process.stdout.write(script);
-	process.stdout.write("\n");
+	if (!isQuiet()) {
+		process.stdout.write(script);
+		process.stdout.write("\n");
+	}
 }

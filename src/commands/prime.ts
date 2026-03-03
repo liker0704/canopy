@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import type { Command } from "commander";
-import { jsonOut } from "../output.ts";
+import { isQuiet, jsonOut } from "../output.ts";
 
 const PRIME_FILE = "PRIME.md";
 
@@ -109,7 +109,8 @@ cn emit <name>                        # Verify emit output
 
 export default async function prime(args: string[], json: boolean): Promise<void> {
 	if (args.includes("--help") || args.includes("-h")) {
-		process.stdout.write(`Usage: cn prime [options]
+		if (!isQuiet()) {
+			process.stdout.write(`Usage: cn prime [options]
 
 Outputs canopy workflow context for AI agent sessions.
 
@@ -118,6 +119,7 @@ Options:
   --export    Output default template (ignores custom PRIME.md)
   --json      Output as JSON
 `);
+		}
 		return;
 	}
 
@@ -129,7 +131,7 @@ Options:
 		const content = defaultPrimeContent(false);
 		if (json) {
 			jsonOut({ success: true, command: "prime", content });
-		} else {
+		} else if (!isQuiet()) {
 			process.stdout.write(content);
 		}
 		return;
@@ -153,7 +155,7 @@ Options:
 
 	if (json) {
 		jsonOut({ success: true, command: "prime", content });
-	} else {
+	} else if (!isQuiet()) {
 		process.stdout.write(content);
 	}
 }

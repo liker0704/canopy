@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { Command } from "commander";
 import { detectStatus, replaceMarkerSection, VERSION_MARKER, wrapInMarkers } from "../markers.ts";
-import { humanOut, jsonOut } from "../output.ts";
+import { humanOut, isQuiet, jsonOut } from "../output.ts";
 
 const CANDIDATE_FILES = ["CLAUDE.md", ".claude/CLAUDE.md", "AGENTS.md"] as const;
 
@@ -81,8 +81,10 @@ Options:
 
 	// --stdout mode: print what would be written
 	if (stdoutMode) {
-		process.stdout.write(wrapInMarkers(snippet));
-		process.stdout.write("\n");
+		if (!isQuiet()) {
+			process.stdout.write(wrapInMarkers(snippet));
+			process.stdout.write("\n");
+		}
 		return;
 	}
 

@@ -10,22 +10,20 @@ const t0 = performance.now();
 
 const rawArgs = process.argv.slice(2);
 
+// Apply quiet mode early (before any output)
+if (rawArgs.includes("--quiet") || rawArgs.includes("-q")) {
+	setQuiet(true);
+}
+
 // --version --json: rich metadata output (before Commander processes version flag)
 if ((rawArgs.includes("-v") || rawArgs.includes("--version")) && rawArgs.includes("--json")) {
 	const platform = `${process.platform}-${process.arch}`;
-	console.log(
-		JSON.stringify({ name: "@os-eco/canopy-cli", version: VERSION, runtime: "bun", platform }),
-	);
+	jsonOut({ name: "@os-eco/canopy-cli", version: VERSION, runtime: "bun", platform });
 	if (rawArgs.includes("--timing")) {
 		const elapsed = Math.round(performance.now() - t0);
 		process.stderr.write(`[timing] ${elapsed}ms\n`);
 	}
 	process.exit();
-}
-
-// Apply quiet mode early (before Commander parses)
-if (rawArgs.includes("--quiet") || rawArgs.includes("-q")) {
-	setQuiet(true);
 }
 
 const program = new Command();
