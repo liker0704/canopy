@@ -114,25 +114,6 @@
 				"no-worktree"
 			]
 		},
-		"supervisor": {
-			"file": "supervisor.md",
-			"model": "opus",
-			"tools": [
-				"Read",
-				"Write",
-				"Edit",
-				"Glob",
-				"Grep",
-				"Bash",
-				"Task"
-			],
-			"capabilities": [
-				"coordinate",
-				"supervise"
-			],
-			"canSpawn": true,
-			"constraints": []
-		},
 		"monitor": {
 			"file": "monitor.md",
 			"model": "sonnet",
@@ -179,8 +160,7 @@
 		],
 		"coordinate": [
 			"lead",
-			"coordinator",
-			"supervisor"
+			"coordinator"
 		],
 		"merge": [
 			"merger"
@@ -193,9 +173,6 @@
 		],
 		"escalate": [
 			"coordinator"
-		],
-		"supervise": [
-			"supervisor"
 		],
 		"monitor": [
 			"monitor"

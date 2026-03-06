@@ -1,28 +1,32 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab",
-		"lineWidth": 100
+	"$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
+	"files": {
+		"includes": ["src/**", "scripts/**", "!**/node_modules"]
 	},
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"complexity": {
 				"noForEach": "off"
+			},
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noUnusedImports": "error"
+			},
+			"suspicious": {
+				"noExplicitAny": "error"
+			},
+			"style": {
+				"noNonNullAssertion": "warn",
+				"useConst": "error"
 			}
 		}
 	},
-	"files": {
-		"includes": [
-			"**",
-			"!**/node_modules",
-			"!**/.canopy",
-			"!**/.seeds",
-			"!**/.mulch",
-			"!**/.overstory",
-			"!**/.claude"
-		]
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 100
 	}
 }

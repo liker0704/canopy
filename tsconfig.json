@@ -2,7 +2,9 @@
 	"compilerOptions": {
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
-		"target": "ESNext",
+		"noFallthroughCasesInSwitch": true,
+		"isolatedModules": true,
+		"target": "ES2022",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
