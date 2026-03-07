@@ -94,5 +94,15 @@
 		"status": "completed",
 		"createdAt": "2026-03-03T19:58:20.912Z",
 		"completedAt": "2026-03-03T20:08:42.207Z"
+	},
+	{
+		"id": "group-10b5b158",
+		"name": "v1-audit-batch",
+		"memberIssueIds": [
+			"seeds-20c9"
+		],
+		"status": "active",
+		"createdAt": "2026-03-07T14:32:16.372Z",
+		"completedAt": null
 	}
 ]
