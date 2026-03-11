@@ -18,6 +18,7 @@ Options:
   --name <name>           Prompt name (required)
   --description <text>    Short description
   --extends <name>        Inherit from parent prompt
+  --mixin <name>          Add mixin prompt (repeatable)
   --tag <tag>             Add tag (repeatable)
   --schema <name>         Assign validation schema
   --emit-as <filename>    Custom emit filename
@@ -34,6 +35,7 @@ Options:
 	let name = "";
 	let description: string | undefined;
 	let extendsName: string | undefined;
+	const mixins: string[] = [];
 	const tags: string[] = [];
 	let schema: string | undefined;
 	let emitAs: string | undefined;
@@ -50,6 +52,8 @@ Options:
 			description = args[++i];
 		} else if (arg === "--extends" && args[i + 1]) {
 			extendsName = args[++i];
+		} else if (arg === "--mixin" && args[i + 1]) {
+			mixins.push(args[++i] ?? "");
 		} else if (arg === "--tag" && args[i + 1]) {
 			tags.push(args[++i] ?? "");
 		} else if (arg === "--schema" && args[i + 1]) {
@@ -141,6 +145,23 @@ Options:
 			}
 		}
 
+		// Validate mixins if specified
+		for (const mixinName of mixins) {
+			const mixin = current.find((p) => p.name === mixinName);
+			if (!mixin) {
+				if (json) {
+					jsonOut({
+						success: false,
+						command: "create",
+						error: `Mixin prompt '${mixinName}' not found`,
+					});
+				} else {
+					errorOut(`Mixin prompt '${mixinName}' not found`);
+				}
+				throw new ExitError(1);
+			}
+		}
+
 		const id = generateId(
 			config.project,
 			current.map((p) => p.id),
@@ -159,6 +180,7 @@ Options:
 
 		if (description) prompt.description = description;
 		if (extendsName) prompt.extends = extendsName;
+		if (mixins.length > 0) prompt.mixins = mixins;
 		if (tags.length > 0) prompt.tags = tags;
 		if (schema) prompt.schema = schema;
 		if (emitAs) prompt.emitAs = emitAs;
@@ -184,6 +206,12 @@ export function registerCreateCommand(program: Command): void {
 		.requiredOption("--name <name>", "Prompt name")
 		.option("--description <text>", "Short description")
 		.option("--extends <name>", "Inherit from parent prompt")
+		.option(
+			"--mixin <name>",
+			"Add mixin prompt (repeatable)",
+			(v: string, a: string[]) => a.concat([v]),
+			[] as string[],
+		)
 		.option(
 			"--tag <tag>",
 			"Add tag (repeatable)",
@@ -211,6 +239,7 @@ export function registerCreateCommand(program: Command): void {
 			const args: string[] = ["--name", opts.name as string];
 			if (opts.description) args.push("--description", opts.description as string);
 			if (opts.extends) args.push("--extends", opts.extends as string);
+			for (const mixin of opts.mixin as string[]) args.push("--mixin", mixin);
 			for (const tag of opts.tag as string[]) args.push("--tag", tag);
 			if (opts.schema) args.push("--schema", opts.schema as string);
 			if (opts.emitAs) args.push("--emit-as", opts.emitAs as string);

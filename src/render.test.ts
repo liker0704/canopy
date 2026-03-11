@@ -151,6 +151,240 @@ describe("resolvePrompt", () => {
 		expect(() => resolvePrompt("nonexistent", [])).toThrow(/not found/);
 	});
 
+	describe("mixins", () => {
+		it("applies mixin sections on top of own sections", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "trait-a",
+					sections: [{ name: "caution", body: "Be careful." }],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "child",
+					mixins: ["trait-a"],
+					sections: [{ name: "role", body: "Child role" }],
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.sections).toHaveLength(2);
+			expect(result.sections[0]?.name).toBe("caution");
+			expect(result.sections[1]?.name).toBe("role");
+			expect(result.resolvedFrom).toEqual(["trait-a", "child"]);
+		});
+
+		it("later mixin overrides earlier mixin sections", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "trait-a",
+					sections: [{ name: "style", body: "Verbose" }],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "trait-b",
+					sections: [{ name: "style", body: "Concise" }],
+				}),
+				makePrompt({
+					id: "p-0003",
+					name: "child",
+					mixins: ["trait-a", "trait-b"],
+					sections: [{ name: "role", body: "Child role" }],
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.sections).toHaveLength(2);
+			expect(result.sections[0]?.body).toBe("Concise");
+			expect(result.sections[1]?.name).toBe("role");
+		});
+
+		it("focal prompt overrides mixin sections", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "trait-a",
+					sections: [{ name: "role", body: "Trait role" }],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "child",
+					mixins: ["trait-a"],
+					sections: [{ name: "role", body: "My role" }],
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.sections).toHaveLength(1);
+			expect(result.sections[0]?.body).toBe("My role");
+		});
+
+		it("combines extends and mixins (extends first, then mixins, then focal)", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "base",
+					sections: [
+						{ name: "role", body: "Base role" },
+						{ name: "constraints", body: "Base constraints" },
+					],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "trait-review",
+					sections: [{ name: "review-style", body: "Be thorough" }],
+				}),
+				makePrompt({
+					id: "p-0003",
+					name: "trait-caution",
+					sections: [{ name: "caution", body: "Be careful" }],
+				}),
+				makePrompt({
+					id: "p-0004",
+					name: "cautious-reviewer",
+					extends: "base",
+					mixins: ["trait-review", "trait-caution"],
+					sections: [{ name: "quality-gates", body: "Run tests" }],
+				}),
+			];
+
+			const result = resolvePrompt("cautious-reviewer", prompts);
+			expect(result.sections).toHaveLength(5);
+			expect(result.sections.map((s) => s.name)).toEqual([
+				"role",
+				"constraints",
+				"review-style",
+				"caution",
+				"quality-gates",
+			]);
+			expect(result.resolvedFrom).toEqual([
+				"base",
+				"trait-review",
+				"trait-caution",
+				"cautious-reviewer",
+			]);
+		});
+
+		it("mixin overrides parent section, focal overrides mixin", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "base",
+					sections: [{ name: "role", body: "Base role" }],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "trait",
+					sections: [{ name: "role", body: "Trait role" }],
+				}),
+				makePrompt({
+					id: "p-0003",
+					name: "child",
+					extends: "base",
+					mixins: ["trait"],
+					sections: [{ name: "role", body: "Child role" }],
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.sections).toHaveLength(1);
+			expect(result.sections[0]?.body).toBe("Child role");
+		});
+
+		it("merges frontmatter from mixins (extends → mixins → focal)", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "base",
+					sections: [],
+					frontmatter: { model: "claude-3", temperature: 0.5 },
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "trait",
+					sections: [],
+					frontmatter: { temperature: 0.9, topP: 0.95 },
+				}),
+				makePrompt({
+					id: "p-0003",
+					name: "child",
+					extends: "base",
+					mixins: ["trait"],
+					sections: [],
+					frontmatter: { maxTokens: 2000 },
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.frontmatter).toEqual({
+				model: "claude-3",
+				temperature: 0.9,
+				topP: 0.95,
+				maxTokens: 2000,
+			});
+		});
+
+		it("detects circular reference via mixin", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "a",
+					mixins: ["b"],
+					sections: [],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "b",
+					mixins: ["a"],
+					sections: [],
+				}),
+			];
+
+			expect(() => resolvePrompt("a", prompts)).toThrow(/Circular inheritance/);
+		});
+
+		it("handles mixin with its own extends chain", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "trait-base",
+					sections: [{ name: "trait-core", body: "Core trait" }],
+				}),
+				makePrompt({
+					id: "p-0002",
+					name: "trait-ext",
+					extends: "trait-base",
+					sections: [{ name: "trait-extra", body: "Extra trait" }],
+				}),
+				makePrompt({
+					id: "p-0003",
+					name: "child",
+					mixins: ["trait-ext"],
+					sections: [{ name: "role", body: "Child role" }],
+				}),
+			];
+
+			const result = resolvePrompt("child", prompts);
+			expect(result.sections).toHaveLength(3);
+			expect(result.sections.map((s) => s.name)).toEqual(["trait-core", "trait-extra", "role"]);
+			expect(result.resolvedFrom).toEqual(["trait-base", "trait-ext", "child"]);
+		});
+
+		it("throws for missing mixin prompt", () => {
+			const prompts: Prompt[] = [
+				makePrompt({
+					id: "p-0001",
+					name: "child",
+					mixins: ["nonexistent"],
+					sections: [],
+				}),
+			];
+
+			expect(() => resolvePrompt("child", prompts)).toThrow(/not found/);
+		});
+	});
+
 	describe("frontmatter merging", () => {
 		it("returns own frontmatter when no parent", () => {
 			const prompts: Prompt[] = [

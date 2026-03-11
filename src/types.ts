@@ -11,6 +11,7 @@ export interface Prompt {
 	version: number;
 	sections: Section[];
 	extends?: string;
+	mixins?: string[];
 	tags?: string[];
 	schema?: string;
 	emitAs?: string;

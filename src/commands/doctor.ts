@@ -250,7 +250,7 @@ async function checkInheritance(canopyDir: string): Promise<DoctorCheck> {
 	const details: string[] = [];
 
 	for (const prompt of prompts) {
-		if (!prompt.extends) continue;
+		if (!prompt.extends && (!prompt.mixins || prompt.mixins.length === 0)) continue;
 		try {
 			resolvePrompt(prompt.name, prompts);
 		} catch (err: unknown) {

@@ -24,6 +24,8 @@ Options:
   --untag <tag>              Remove tag (repeatable)
   --schema <name>            Assign schema
   --extends <name>           Change parent
+  --mixin <name>             Add mixin (repeatable)
+  --remove-mixin <name>      Remove mixin (repeatable)
   --emit-as <filename>       Custom emit filename
   --emit-dir <path>          Custom emit directory
   --fm <key=value>           Set frontmatter field (repeatable)
@@ -53,6 +55,8 @@ Options:
 	let newDescription: string | undefined;
 	let newSchema: string | undefined;
 	let newExtends: string | undefined;
+	const addMixins: string[] = [];
+	const removeMixins: string[] = [];
 	let newEmitAs: string | undefined;
 	let newEmitDir: string | undefined;
 	let newStatus: string | undefined;
@@ -102,6 +106,10 @@ Options:
 			newSchema = args[++i];
 		} else if (arg === "--extends" && args[i + 1]) {
 			newExtends = args[++i];
+		} else if (arg === "--mixin" && args[i + 1]) {
+			addMixins.push(args[++i] ?? "");
+		} else if (arg === "--remove-mixin" && args[i + 1]) {
+			removeMixins.push(args[++i] ?? "");
 		} else if (arg === "--emit-as" && args[i + 1]) {
 			newEmitAs = args[++i];
 		} else if (arg === "--emit-dir" && args[i + 1]) {
@@ -197,6 +205,14 @@ Options:
 		for (const k of fmRemovals) delete currentFm[k];
 		updated.frontmatter = Object.keys(currentFm).length > 0 ? currentFm : undefined;
 
+		// Mixins
+		if (addMixins.length > 0 || removeMixins.length > 0) {
+			const currentMixins = new Set(updated.mixins ?? []);
+			for (const m of addMixins) currentMixins.add(m);
+			for (const m of removeMixins) currentMixins.delete(m);
+			updated.mixins = currentMixins.size > 0 ? Array.from(currentMixins) : undefined;
+		}
+
 		if (newDescription !== undefined) updated.description = newDescription;
 		if (newSchema !== undefined) updated.schema = newSchema;
 		if (newExtends !== undefined) updated.extends = newExtends;
@@ -260,6 +276,18 @@ export function registerUpdateCommand(program: Command): void {
 		)
 		.option("--schema <name>", "Assign schema")
 		.option("--extends <name>", "Change parent prompt")
+		.option(
+			"--mixin <name>",
+			"Add mixin (repeatable)",
+			(v: string, a: string[]) => a.concat([v]),
+			[] as string[],
+		)
+		.option(
+			"--remove-mixin <name>",
+			"Remove mixin (repeatable)",
+			(v: string, a: string[]) => a.concat([v]),
+			[] as string[],
+		)
 		.option("--emit-as <filename>", "Custom emit filename")
 		.option("--emit-dir <path>", "Custom emit directory")
 		.option("--status <status>", "Change status (draft|active|archived)")
@@ -290,6 +318,8 @@ export function registerUpdateCommand(program: Command): void {
 			for (const tag of opts.untag as string[]) args.push("--untag", tag);
 			if (opts.schema) args.push("--schema", opts.schema as string);
 			if (opts.extends) args.push("--extends", opts.extends as string);
+			for (const mixin of opts.mixin as string[]) args.push("--mixin", mixin);
+			for (const mixin of opts.removeMixin as string[]) args.push("--remove-mixin", mixin);
 			if (opts.emitAs) args.push("--emit-as", opts.emitAs as string);
 			if (opts.emitDir) args.push("--emit-dir", opts.emitDir as string);
 			if (opts.status) args.push("--status", opts.status as string);

@@ -40,7 +40,7 @@ Options:
 		throw new ExitError(1);
 	}
 
-	// Build ancestry chain (parents)
+	// Build ancestry chain (parents via extends)
 	const ancestors: string[] = [];
 	let cur: Prompt | undefined = prompt;
 	while (cur?.extends) {
@@ -51,15 +51,23 @@ Options:
 	}
 	ancestors.reverse();
 
-	// Find all descendants
+	// Collect mixins for the focal prompt
+	const mixins: string[] = prompt.mixins ?? [];
+
+	// Find all descendants (via extends or mixins)
 	function getChildren(pname: string): string[] {
 		return current.filter((p) => p.extends === pname && p.name !== pname).map((p) => p.name);
+	}
+
+	function getMixinUsers(pname: string): string[] {
+		return current.filter((p) => p.mixins?.includes(pname) && p.name !== pname).map((p) => p.name);
 	}
 
 	if (json) {
 		const buildTree = (pname: string): object => ({
 			name: pname,
 			children: getChildren(pname).map(buildTree),
+			mixinUsers: getMixinUsers(pname),
 		});
 
 		jsonOut({
@@ -67,6 +75,7 @@ Options:
 			command: "tree",
 			name,
 			ancestors,
+			mixins,
 			tree: buildTree(name),
 		});
 		return;
@@ -80,7 +89,8 @@ Options:
 
 	// Render focal node
 	const focalIndent = "  ".repeat(ancestors.length);
-	humanOut(`${focalIndent}${c.bold(c.cyan(name))} ${c.dim(`(v${prompt.version})`)}`);
+	const mixinLabel = mixins.length > 0 ? c.dim(` + ${mixins.join(", ")}`) : "";
+	humanOut(`${focalIndent}${c.bold(c.cyan(name))} ${c.dim(`(v${prompt.version})`)}${mixinLabel}`);
 
 	// Render children recursively
 	function renderChildren(pname: string, depth: number) {
@@ -89,7 +99,10 @@ Options:
 			const indent = "  ".repeat(depth);
 			const childPrompt = current.find((p) => p.name === child);
 			const ver = childPrompt ? c.dim(` v${childPrompt.version}`) : "";
-			humanOut(`${indent}├── ${child}${ver}`);
+			const childMixins = childPrompt?.mixins?.length
+				? c.dim(` + ${childPrompt.mixins.join(", ")}`)
+				: "";
+			humanOut(`${indent}├── ${child}${ver}${childMixins}`);
 			renderChildren(child, depth + 1);
 		}
 	}

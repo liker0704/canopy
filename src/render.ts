@@ -9,9 +9,12 @@ export interface RenderResult {
 }
 
 /**
- * Resolve a prompt's full section list by walking the inheritance chain.
- * Parent sections first, child overrides/appends on top.
- * Empty body = section removal.
+ * Resolve a prompt's full section list by walking the inheritance chain
+ * and applying mixins. Resolution order:
+ * 1. Resolve extends chain (parent first)
+ * 2. For each mixin (left-to-right), resolve it fully
+ * 3. Merge: base → mixin₁ → mixin₂ → … → focal prompt
+ * Later entries override earlier on section name conflicts.
  */
 export function resolvePrompt(name: string, prompts: Prompt[], version?: number): RenderResult {
 	const visited: string[] = [];
@@ -42,8 +45,8 @@ function resolveInner(
 
 	visited.push(name);
 
-	// No parent — return own sections (excluding empty-body removals)
-	if (!prompt.extends) {
+	// No parent and no mixins — return own sections (excluding empty-body removals)
+	if (!prompt.extends && (!prompt.mixins || prompt.mixins.length === 0)) {
 		const sections = prompt.sections.filter((s) => s.body !== "");
 		return {
 			sections,
@@ -53,16 +56,39 @@ function resolveInner(
 		};
 	}
 
-	// Resolve parent first
-	const parentResult = resolveInner(prompt.extends, prompts, undefined, visited);
+	// Start with parent chain if exists
+	let baseSections: Section[] = [];
+	let baseFrontmatter: Record<string, unknown> = {};
+	let baseResolvedFrom: string[] = [];
 
-	// Merge: parent sections first, child overrides/appends
-	const merged = mergeSections(parentResult.sections, prompt.sections);
+	if (prompt.extends) {
+		const parentResult = resolveInner(prompt.extends, prompts, undefined, visited);
+		baseSections = parentResult.sections;
+		baseFrontmatter = parentResult.frontmatter;
+		baseResolvedFrom = parentResult.resolvedFrom;
+	}
+
+	// Apply each mixin left-to-right on top of the base
+	if (prompt.mixins && prompt.mixins.length > 0) {
+		for (const mixinName of prompt.mixins) {
+			// Each mixin resolves with its own visited-branch to allow
+			// the same ancestor to appear via extends AND a mixin (diamond).
+			// But we must still detect cycles involving the focal prompt.
+			const mixinVisited = [...visited];
+			const mixinResult = resolveInner(mixinName, prompts, undefined, mixinVisited);
+			baseSections = mergeSections(baseSections, mixinResult.sections);
+			baseFrontmatter = { ...baseFrontmatter, ...mixinResult.frontmatter };
+			baseResolvedFrom = [...baseResolvedFrom, ...mixinResult.resolvedFrom];
+		}
+	}
+
+	// Finally apply the focal prompt's own sections on top
+	const merged = mergeSections(baseSections, prompt.sections);
 
 	return {
 		sections: merged,
-		frontmatter: { ...parentResult.frontmatter, ...(prompt.frontmatter ?? {}) },
-		resolvedFrom: [...parentResult.resolvedFrom, name],
+		frontmatter: { ...baseFrontmatter, ...(prompt.frontmatter ?? {}) },
+		resolvedFrom: [...baseResolvedFrom, name],
 		version: prompt.version,
 	};
 }

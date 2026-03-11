@@ -14,6 +14,7 @@ export default async function list(args: string[], json: boolean): Promise<void>
 Options:
   --tag <tag>     Filter by tag
   --status <s>    Filter by status (draft|active|archived)
+  --mixin <name>  Filter by mixin
   --json          Output as JSON`);
 		return;
 	}
@@ -22,6 +23,7 @@ Options:
 	let filterTag: string | undefined;
 	let filterStatus: string | undefined;
 	let filterExtends: string | undefined;
+	let filterMixin: string | undefined;
 
 	for (let i = 0; i < args.length; i++) {
 		if (args[i] === "--tag" && args[i + 1]) {
@@ -30,6 +32,8 @@ Options:
 			filterStatus = args[++i];
 		} else if (args[i] === "--extends" && args[i + 1]) {
 			filterExtends = args[++i];
+		} else if (args[i] === "--mixin" && args[i + 1]) {
+			filterMixin = args[++i];
 		}
 	}
 
@@ -51,6 +55,10 @@ Options:
 		prompts = prompts.filter((p) => p.extends === filterExtends);
 	}
 
+	if (filterMixin) {
+		prompts = prompts.filter((p) => p.mixins?.includes(filterMixin as string));
+	}
+
 	if (json) {
 		jsonOut({ success: true, command: "list", prompts, count: prompts.length });
 	} else {
@@ -62,9 +70,10 @@ Options:
 		for (const p of prompts) {
 			const tags = p.tags?.length ? c.dim(` [${p.tags.join(", ")}]`) : "";
 			const ext = p.extends ? c.dim(` → ${p.extends}`) : "";
+			const mix = p.mixins?.length ? c.dim(` + ${p.mixins.join(", ")}`) : "";
 			const pin = p.pinned !== undefined ? c.yellow(` (pinned @${p.pinned})`) : "";
 			humanOut(
-				`${c.bold(p.name)}${ext}${tags}${pin}  ${c.dim(`v${p.version} · ${p.status} · ${p.id}`)}`,
+				`${c.bold(p.name)}${ext}${mix}${tags}${pin}  ${c.dim(`v${p.version} · ${p.status} · ${p.id}`)}`,
 			);
 		}
 		humanOut(c.dim(`\n${prompts.length} prompt${prompts.length === 1 ? "" : "s"}`));
@@ -78,13 +87,21 @@ export function registerListCommand(program: Command): void {
 		.option("--tag <tag>", "Filter by tag")
 		.option("--status <status>", "Filter by status (draft|active|archived)")
 		.option("--extends <name>", "Filter by parent prompt")
+		.option("--mixin <name>", "Filter by mixin")
 		.option("--json", "Output as JSON")
 		.action(
-			async (options: { tag?: string; status?: string; extends?: string; json?: boolean }) => {
+			async (options: {
+				tag?: string;
+				status?: string;
+				extends?: string;
+				mixin?: string;
+				json?: boolean;
+			}) => {
 				const args: string[] = [];
 				if (options.tag) args.push("--tag", options.tag);
 				if (options.status) args.push("--status", options.status);
 				if (options.extends) args.push("--extends", options.extends);
+				if (options.mixin) args.push("--mixin", options.mixin);
 				if (options.json) args.push("--json");
 				await list(args, options.json ?? false);
 			},
