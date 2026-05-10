@@ -16,8 +16,8 @@ Options:
 
 	const statusOnly = args.includes("--status");
 
-	// Check git status of .canopy/
-	const statusResult = Bun.spawnSync(["git", "status", "--porcelain", ".canopy/"], { cwd });
+	// Check git status of .tane/
+	const statusResult = Bun.spawnSync(["git", "status", "--porcelain", ".tane/"], { cwd });
 
 	if (statusResult.exitCode !== 0) {
 		const stderr = statusResult.stderr.toString();
@@ -44,7 +44,7 @@ Options:
 			});
 		} else {
 			if (changedFiles.length === 0) {
-				humanOut(fmt.success(".canopy/ is clean (no uncommitted changes)"));
+				humanOut(fmt.success(".tane/ is clean (no uncommitted changes)"));
 			} else {
 				humanOut(fmt.warning(`${changedFiles.length} uncommitted file(s)`));
 				for (const f of changedFiles) {
@@ -59,13 +59,13 @@ Options:
 		if (json) {
 			jsonOut({ success: true, command: "sync", committed: false, message: "Nothing to commit" });
 		} else {
-			humanOut(c.dim("Nothing to commit in .canopy/"));
+			humanOut(c.dim("Nothing to commit in .tane/"));
 		}
 		return;
 	}
 
-	// Stage .canopy/ changes
-	const addResult = Bun.spawnSync(["git", "add", ".canopy/"], { cwd });
+	// Stage .tane/ changes
+	const addResult = Bun.spawnSync(["git", "add", ".tane/"], { cwd });
 	if (addResult.exitCode !== 0) {
 		const err = addResult.stderr.toString();
 		if (json) {
@@ -77,7 +77,7 @@ Options:
 	}
 
 	// Commit
-	const msg = `canopy: sync ${new Date().toISOString().slice(0, 10)}`;
+	const msg = `tane: sync ${new Date().toISOString().slice(0, 10)}`;
 	const commitResult = Bun.spawnSync(["git", "commit", "-m", msg], { cwd });
 
 	if (commitResult.exitCode !== 0) {
@@ -100,7 +100,7 @@ Options:
 export function registerSyncCommand(program: Command): void {
 	program
 		.command("sync")
-		.description("Stage and commit .canopy/ changes")
+		.description("Stage and commit .tane/ changes")
 		.option("--status", "Check sync status without committing")
 		.option("--json", "Output as JSON")
 		.action(async (options: { status?: boolean; json?: boolean }) => {

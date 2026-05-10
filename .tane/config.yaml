@@ -1,4 +1,4 @@
-project: canopy
+project: tane
 version: 1
 emitDir: agents
 emitDirByTag:

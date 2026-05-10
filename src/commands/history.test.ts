@@ -166,7 +166,7 @@ describe("cn history", () => {
 			await captureOutput(() => create(["--name", "versioned-prompt"], false));
 
 			// Manually append additional versions to simulate updates
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const { readJsonl, dedupById } = await import("../store.ts");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
@@ -205,7 +205,7 @@ describe("cn history", () => {
 			await captureOutput(() => create(["--name", "limit-prompt"], false));
 
 			// Add multiple versions
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const { readJsonl, dedupById } = await import("../store.ts");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
@@ -240,7 +240,7 @@ describe("cn history", () => {
 		try {
 			await captureOutput(() => create(["--name", "ordered-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const { readJsonl, dedupById } = await import("../store.ts");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
@@ -297,7 +297,7 @@ describe("cn history", () => {
 		try {
 			await captureOutput(() => create(["--name", "current-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const { readJsonl, dedupById } = await import("../store.ts");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);

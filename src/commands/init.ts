@@ -7,20 +7,20 @@ import { ExitError } from "../types.ts";
 
 export default async function init(_args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const canopyDir = join(cwd, ".canopy");
+	const canopyDir = join(cwd, ".tane");
 
 	if (_args.includes("--help") || _args.includes("-h")) {
 		humanOut(`Usage: cn init
 
-Initializes .canopy/ in the current directory with config and empty JSONL stores.`);
+Initializes .tane/ in the current directory with config and empty JSONL stores.`);
 		return;
 	}
 
 	if (existsSync(canopyDir)) {
 		if (json) {
-			jsonOut({ success: false, command: "init", error: ".canopy/ already exists" });
+			jsonOut({ success: false, command: "init", error: ".tane/ already exists" });
 		} else {
-			errorOut(".canopy/ already exists");
+			errorOut(".tane/ already exists");
 		}
 		throw new ExitError(1);
 	}
@@ -29,14 +29,14 @@ Initializes .canopy/ in the current directory with config and empty JSONL stores
 
 	// Write default config
 	await saveConfig(cwd, {
-		project: "canopy",
+		project: "tane",
 		version: "1",
 		targets: {
 			default: { dir: "agents", default: true },
 		},
 	});
 
-	// Write .gitignore for .canopy/
+	// Write .gitignore for .tane/
 	await Bun.write(join(canopyDir, ".gitignore"), "*.lock\n");
 
 	// Create empty JSONL files
@@ -45,7 +45,7 @@ Initializes .canopy/ in the current directory with config and empty JSONL stores
 
 	// Append .gitattributes to project root
 	const gitattrsPath = join(cwd, ".gitattributes");
-	const gitattrsEntry = ".canopy/prompts.jsonl merge=union\n.canopy/schemas.jsonl merge=union\n";
+	const gitattrsEntry = ".tane/prompts.jsonl merge=union\n.tane/schemas.jsonl merge=union\n";
 
 	let existing = "";
 	try {
@@ -54,15 +54,15 @@ Initializes .canopy/ in the current directory with config and empty JSONL stores
 		existing = "";
 	}
 
-	if (!existing.includes(".canopy/prompts.jsonl")) {
+	if (!existing.includes(".tane/prompts.jsonl")) {
 		await Bun.write(gitattrsPath, existing + gitattrsEntry);
 	}
 
 	if (json) {
 		jsonOut({ success: true, command: "init", dir: canopyDir });
 	} else {
-		humanOut(`Initialized .canopy/ in ${cwd}`);
-		humanOut("  config.yaml: project=canopy, targets: default → agents/");
+		humanOut(`Initialized .tane/ in ${cwd}`);
+		humanOut("  config.yaml: project=tane, targets: default → agents/");
 		humanOut("  prompts.jsonl created");
 		humanOut("  schemas.jsonl created");
 		humanOut("  .gitattributes updated with merge=union");
@@ -72,7 +72,7 @@ Initializes .canopy/ in the current directory with config and empty JSONL stores
 export function registerInitCommand(program: Command): void {
 	program
 		.command("init")
-		.description("Initialize .canopy/ in current directory")
+		.description("Initialize .tane/ in current directory")
 		.option("--json", "Output as JSON")
 		.action(async (options: { json?: boolean }) => {
 			const args = options.json ? ["--json"] : [];

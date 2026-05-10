@@ -55,9 +55,9 @@ describe("cn onboard", () => {
 		try {
 			await captureOutput(() => onboard([], false));
 			const content = await Bun.file(join(tmpDir, "CLAUDE.md")).text();
-			expect(content).toContain("<!-- canopy:start -->");
-			expect(content).toContain("<!-- canopy:end -->");
-			expect(content).toContain("Prompt Management (Canopy)");
+			expect(content).toContain("<!-- tane:start -->");
+			expect(content).toContain("<!-- tane:end -->");
+			expect(content).toContain("Prompt Management (Tane)");
 			expect(content).toContain("cn prime");
 		} finally {
 			process.chdir(origCwd);
@@ -73,8 +73,8 @@ describe("cn onboard", () => {
 			const content = await Bun.file(join(tmpDir, "CLAUDE.md")).text();
 			expect(content).toContain("# My Project");
 			expect(content).toContain("Existing content.");
-			expect(content).toContain("<!-- canopy:start -->");
-			expect(content).toContain("Prompt Management (Canopy)");
+			expect(content).toContain("<!-- tane:start -->");
+			expect(content).toContain("Prompt Management (Tane)");
 		} finally {
 			process.chdir(origCwd);
 		}
@@ -136,8 +136,8 @@ describe("cn onboard", () => {
 		process.chdir(tmpDir);
 		try {
 			const { stdout } = await captureOutput(() => onboard(["--stdout"], false));
-			expect(stdout).toContain("<!-- canopy:start -->");
-			expect(stdout).toContain("Prompt Management (Canopy)");
+			expect(stdout).toContain("<!-- tane:start -->");
+			expect(stdout).toContain("Prompt Management (Tane)");
 			// Should not have created the file
 			expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
 		} finally {
@@ -154,7 +154,7 @@ describe("cn onboard", () => {
 			await Bun.write(join(claudeDir, "CLAUDE.md"), "# Agent Instructions\n");
 			await captureOutput(() => onboard([], false));
 			const content = await Bun.file(join(claudeDir, "CLAUDE.md")).text();
-			expect(content).toContain("<!-- canopy:start -->");
+			expect(content).toContain("<!-- tane:start -->");
 			// Root CLAUDE.md should NOT have been created
 			expect(existsSync(join(tmpDir, "CLAUDE.md"))).toBe(false);
 		} finally {
@@ -167,14 +167,14 @@ describe("cn onboard", () => {
 		process.chdir(tmpDir);
 		try {
 			const oldContent =
-				"# Project\n\n<!-- canopy:start -->\n## Old Canopy Section\n<!-- canopy-onboard-v:0 -->\nold content\n<!-- canopy:end -->\n";
+				"# Project\n\n<!-- tane:start -->\n## Old Tane Section\n<!-- tane-onboard-v:0 -->\nold content\n<!-- tane:end -->\n";
 			await Bun.write(join(tmpDir, "CLAUDE.md"), oldContent);
 			await captureOutput(() => onboard([], false));
 			const content = await Bun.file(join(tmpDir, "CLAUDE.md")).text();
 			expect(content).toContain("# Project");
-			expect(content).toContain("canopy-onboard-v:1");
-			expect(content).not.toContain("canopy-onboard-v:0");
-			expect(content).not.toContain("Old Canopy Section");
+			expect(content).toContain("tane-onboard-v:1");
+			expect(content).not.toContain("tane-onboard-v:0");
+			expect(content).not.toContain("Old Tane Section");
 		} finally {
 			process.chdir(origCwd);
 		}
@@ -199,7 +199,7 @@ describe("cn onboard", () => {
 		try {
 			await captureOutput(() => onboard([], false));
 			const content = await Bun.file(join(tmpDir, "CLAUDE.md")).text();
-			expect(content).toContain("canopy-onboard-v:1");
+			expect(content).toContain("tane-onboard-v:1");
 		} finally {
 			process.chdir(origCwd);
 		}

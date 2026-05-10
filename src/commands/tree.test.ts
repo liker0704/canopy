@@ -35,7 +35,7 @@ function captureOutput(fn: () => Promise<void>): Promise<{ stdout: string; stder
 
 function makePrompt(name: string, opts: Partial<Prompt> = {}): Prompt {
 	return {
-		id: `canopy-${name}`,
+		id: `tane-${name}`,
 		name,
 		version: 1,
 		sections: [],
@@ -47,7 +47,7 @@ function makePrompt(name: string, opts: Partial<Prompt> = {}): Prompt {
 }
 
 async function seedPrompts(prompts: Prompt[]): Promise<void> {
-	const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+	const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 	for (const p of prompts) {
 		await appendJsonl(promptsPath, p);
 	}

@@ -133,7 +133,7 @@ describe("cn schema", () => {
 			);
 
 			// Manually add sections
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const prompt = current.find((p) => p.name === "good-agent");
@@ -172,7 +172,7 @@ describe("cn schema", () => {
 			);
 
 			// Only add "role", missing "constraints"
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const prompt = current.find((p) => p.name === "bad-agent");

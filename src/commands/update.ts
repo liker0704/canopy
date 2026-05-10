@@ -7,7 +7,7 @@ import { ExitError } from "../types.ts";
 
 export default async function update(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
 
 	if (args.includes("--help") || args.includes("-h")) {
 		humanOut(`Usage: cn update <name> [options]

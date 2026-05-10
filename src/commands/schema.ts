@@ -55,7 +55,7 @@ Options:
 
 async function schemaCreate(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	let name = "";
 	const requiredSections: string[] = [];
@@ -135,7 +135,7 @@ async function schemaCreate(args: string[], json: boolean): Promise<void> {
 
 async function schemaShow(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	const name = args.filter((a) => !a.startsWith("--"))[0];
 	if (!name) {
@@ -179,7 +179,7 @@ async function schemaShow(args: string[], json: boolean): Promise<void> {
 
 async function schemaList(_args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	const allRecords = await readJsonl<Schema>(schemasPath);
 	const schemas = dedupByIdLast(allRecords);
@@ -200,7 +200,7 @@ async function schemaList(_args: string[], json: boolean): Promise<void> {
 
 async function schemaRuleAdd(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	const schemaName = args.filter((a) => !a.startsWith("--"))[0];
 	if (!schemaName) {

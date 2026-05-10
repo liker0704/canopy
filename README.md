@@ -1,32 +1,34 @@
-# Canopy
+Forked from jayminwest/canopy under MIT License.
+
+# Tane
 
 Git-native prompt management for AI agent workflows.
 
-[![npm](https://img.shields.io/npm/v/@os-eco/canopy-cli)](https://www.npmjs.com/package/@os-eco/canopy-cli)
+[![npm](https://img.shields.io/npm/v/@hana/tane-cli)](https://www.npmjs.com/package/@hana/tane-cli)
 [![CI](https://github.com/jayminwest/canopy/actions/workflows/ci.yml/badge.svg)](https://github.com/jayminwest/canopy/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Agents accumulate dozens of prompt files that share 60%+ identical content. Canopy fixes this: prompts are composed via sections and inheritance, versioned automatically, validated against schemas, and emitted to plain `.md` for downstream consumption. No duplication, no drift.
+Agents accumulate dozens of prompt files that share 60%+ identical content. Tane fixes this: prompts are composed via sections and inheritance, versioned automatically, validated against schemas, and emitted to plain `.md` for downstream consumption. No duplication, no drift.
 
 ## Install
 
 ```bash
-bun install -g @os-eco/canopy-cli
+bun install -g @hana/tane-cli
 ```
 
 Or try without installing:
 
 ```bash
-npx @os-eco/canopy-cli --help
+npx @hana/tane-cli --help
 ```
 
 ### Development
 
 ```bash
 git clone https://github.com/jayminwest/canopy.git
-cd canopy
+cd tane
 bun install
-bun link              # Makes 'cn' available globally
+bun link              # Makes 'ta' available globally
 
 bun test              # Run all tests
 bun run lint          # Biome check
@@ -36,14 +38,14 @@ bun run typecheck     # tsc --noEmit
 ## Quick Start
 
 ```bash
-cn init                                          # Create .canopy/ in your project
-cn create --name base-agent \
+ta init                                          # Create .tane/ in your project
+ta create --name base-agent \
   --section role="You are a helpful assistant" \
   --section constraints="Follow all safety guidelines"
-cn create --name reviewer --extends base-agent \
+ta create --name reviewer --extends base-agent \
   --section role="You are a code reviewer"       # Inherits constraints from base
-cn render reviewer                               # Resolve inheritance, output sections
-cn emit --all                                    # Write all prompts to agents/*.md
+ta render reviewer                               # Resolve inheritance, output sections
+ta emit --all                                    # Write all prompts to agents/*.md
 ```
 
 ## Commands
@@ -54,76 +56,76 @@ Every command supports `--json` for structured output. Global flags: `-v`/`--ver
 
 | Command | Description |
 |---------|-------------|
-| `cn init` | Initialize `.canopy/` in current directory |
-| `cn create --name <text>` | Create a new prompt (`--description`, `--extends`, `--mixin`, `--tag`, `--status`, `--emit-dir`, `--emit-as`, `--fm`, `--section name=body`) |
-| `cn show <name>[@version]` | Show prompt record |
-| `cn list` | List prompts (`--tag`, `--status`, `--extends`, `--mixin` filters) |
-| `cn update <name>` | Update a prompt — creates new version (`--section`, `--add-section`, `--remove-section`, `--tag`, `--untag`, `--description`, `--schema`, `--extends`, `--mixin`, `--remove-mixin`, `--emit-dir`, `--emit-as`, `--fm`, `--remove-fm`, `--status`, `--name`) |
-| `cn archive <name>` | Soft-delete a prompt |
-| `cn render <name>[@version]` | Resolve inheritance, output sections (`--format md\|json`) |
-| `cn tree <name>` | Show inheritance tree |
-| `cn history <name>` | Show version timeline (`--limit`) |
-| `cn diff <name> <v1> <v2>` | Section-aware diff between two versions |
-| `cn pin <name>@<version>` | Pin prompt to a specific version |
-| `cn unpin <name>` | Remove version pin |
+| `ta init` | Initialize `.tane/` in current directory |
+| `ta create --name <text>` | Create a new prompt (`--description`, `--extends`, `--mixin`, `--tag`, `--status`, `--emit-dir`, `--emit-as`, `--fm`, `--section name=body`) |
+| `ta show <name>[@version]` | Show prompt record |
+| `ta list` | List prompts (`--tag`, `--status`, `--extends`, `--mixin` filters) |
+| `ta update <name>` | Update a prompt — creates new version (`--section`, `--add-section`, `--remove-section`, `--tag`, `--untag`, `--description`, `--schema`, `--extends`, `--mixin`, `--remove-mixin`, `--emit-dir`, `--emit-as`, `--fm`, `--remove-fm`, `--status`, `--name`) |
+| `ta archive <name>` | Soft-delete a prompt |
+| `ta render <name>[@version]` | Resolve inheritance, output sections (`--format md\|json`) |
+| `ta tree <name>` | Show inheritance tree |
+| `ta history <name>` | Show version timeline (`--limit`) |
+| `ta diff <name> <v1> <v2>` | Section-aware diff between two versions |
+| `ta pin <name>@<version>` | Pin prompt to a specific version |
+| `ta unpin <name>` | Remove version pin |
 
 ### Emit Commands
 
 | Command | Description |
 |---------|-------------|
-| `cn emit <name>` | Render and write prompt to file (`--out`, `--force`); emits `.ts` when `emitAs` ends in `.ts` |
-| `cn emit --all` | Emit all active prompts (`--out-dir`, `--force`, `--dry-run`) |
-| `cn emit --check` | Check if emitted files are up to date (CI use) |
+| `ta emit <name>` | Render and write prompt to file (`--out`, `--force`); emits `.ts` when `emitAs` ends in `.ts` |
+| `ta emit --all` | Emit all active prompts (`--out-dir`, `--force`, `--dry-run`) |
+| `ta emit --check` | Check if emitted files are up to date (CI use) |
 
 ### Schema & Validation
 
 | Command | Description |
 |---------|-------------|
-| `cn schema create --name <text>` | Create validation schema (`--required`, `--optional` sections) |
-| `cn schema show <name>` | Show schema details |
-| `cn schema list` | List all schemas |
-| `cn schema rule add <name>` | Add validation rule (`--section`, `--pattern`, `--message`) |
-| `cn validate <name>` | Validate a prompt against its schema |
-| `cn validate --all` | Validate all prompts with schemas |
+| `ta schema create --name <text>` | Create validation schema (`--required`, `--optional` sections) |
+| `ta schema show <name>` | Show schema details |
+| `ta schema list` | List all schemas |
+| `ta schema rule add <name>` | Add validation rule (`--section`, `--pattern`, `--message`) |
+| `ta validate <name>` | Validate a prompt against its schema |
+| `ta validate --all` | Validate all prompts with schemas |
 
 ### Agent Integration
 
 | Command | Description |
 |---------|-------------|
-| `cn prime` | Output workflow context for AI agents (`--compact`, `--export`) |
-| `cn onboard` | Add canopy section to CLAUDE.md (`--check`, `--stdout`) |
+| `ta prime` | Output workflow context for AI agents (`--compact`, `--export`) |
+| `ta onboard` | Add tane section to CLAUDE.md (`--check`, `--stdout`) |
 
 ### Utility
 
 | Command | Description |
 |---------|-------------|
-| `cn import <path>` | Import `.md` file as prompt (`--name`, `--no-split`, `--tag`); splits on `##` by default, extracts YAML frontmatter |
-| `cn stats` | Show active/draft/archived counts |
-| `cn sync` | Stage and commit `.canopy/` changes (`--status`) |
-| `cn doctor` | Check project health and data integrity (`--fix`, `--verbose`) |
-| `cn upgrade` | Upgrade canopy to the latest npm version (`--check`) |
-| `cn completions <shell>` | Generate shell completions (bash, zsh, fish) |
+| `ta import <path>` | Import `.md` file as prompt (`--name`, `--no-split`, `--tag`); splits on `##` by default, extracts YAML frontmatter |
+| `ta stats` | Show active/draft/archived counts |
+| `ta sync` | Stage and commit `.tane/` changes (`--status`) |
+| `ta doctor` | Check project health and data integrity (`--fix`, `--verbose`) |
+| `ta upgrade` | Upgrade tane to the latest npm version (`--check`) |
+| `ta completions <shell>` | Generate shell completions (bash, zsh, fish) |
 
 ## Architecture
 
-Canopy stores prompts as versioned JSONL records in `.canopy/prompts.jsonl`, with validation schemas in `schemas.jsonl` and project config in `config.yaml`. Prompts are composed via single inheritance (`extends`) and multi-inheritance (`mixins`) — a child inherits sections from its parent chain plus any mixin prompts, and can override, append, or remove individual sections (up to 5 levels deep with circular reference detection). The `cn emit` pipeline renders resolved prompts to plain `.md` files (or `.ts` modules when `emitAs` ends in `.ts`) for downstream agent consumption. Advisory file locks and atomic writes ensure concurrent-safe access. See [CLAUDE.md](CLAUDE.md) for full technical details.
+Tane stores prompts as versioned JSONL records in `.tane/prompts.jsonl`, with validation schemas in `schemas.jsonl` and project config in `config.yaml`. Prompts are composed via single inheritance (`extends`) and multi-inheritance (`mixins`) — a child inherits sections from its parent chain plus any mixin prompts, and can override, append, or remove individual sections (up to 5 levels deep with circular reference detection). The `ta emit` pipeline renders resolved prompts to plain `.md` files (or `.ts` modules when `emitAs` ends in `.ts`) for downstream agent consumption. Advisory file locks and atomic writes ensure concurrent-safe access. See [CLAUDE.md](CLAUDE.md) for full technical details.
 
 ## How It Works
 
 ```
-1. cn init                → Creates .canopy/ with JSONL files and config
-2. cn create / cn update  → Prompts stored as versioned JSONL records
-3. cn render              → Inheritance resolved, sections composed
-4. cn emit                → Plain .md (or .ts) files written for agent consumption
+1. ta init                → Creates .tane/ with JSONL files and config
+2. ta create / ta update  → Prompts stored as versioned JSONL records
+3. ta render              → Inheritance resolved, sections composed
+4. ta emit                → Plain .md (or .ts) files written for agent consumption
 5. git push               → Teammates get the same prompts, diffable in PRs
 ```
 
 Prompts are **composed, not duplicated**. A child prompt inherits sections from its parent (`extends`) and any mixin prompts (`mixins`), and can override, append, or remove individual sections. Up to 5 levels deep with circular reference detection.
 
-## What's in `.canopy/`
+## What's in `.tane/`
 
 ```
-.canopy/
+.tane/
 ├── config.yaml          # Project config (project name, version, named emit targets)
 ├── prompts.jsonl        # All prompt records with full version history
 ├── schemas.jsonl        # Validation schema definitions
@@ -156,7 +158,7 @@ trait-review (sections: review-style) ← mixin
 
 ## Concurrency & Multi-Agent Safety
 
-Canopy uses advisory file locking and atomic writes — the same patterns proven in [mulch](https://github.com/jayminwest/mulch) and [seeds](https://github.com/jayminwest/seeds).
+Tane uses advisory file locking and atomic writes — the same patterns proven in [mulch](https://github.com/jayminwest/mulch) and [seeds](https://github.com/jayminwest/seeds).
 
 - **Advisory locks**: `.jsonl.lock` files with `O_CREAT|O_EXCL`, 50ms polling, 5s timeout, 30s stale cleanup
 - **Atomic writes**: Write to temp file, rename over original (POSIX atomic)
@@ -170,12 +172,12 @@ Canopy uses advisory file locking and atomic writes — the same patterns proven
 - **Concurrent-safe** — Advisory locks + atomic writes
 - **Git-native** — `merge=union` handles parallel merges, dedup on read
 - **Prompts are composed** — Inheritance eliminates duplication
-- **Emit to plain files** — Canopy is source of truth, tools consume `.md` or `.ts`
+- **Emit to plain files** — Tane is source of truth, tools consume `.md` or `.ts`
 
 ## Project Structure
 
 ```
-canopy/
+tane/
   src/
     index.ts               CLI entry point (command router)
     types.ts               Data models
@@ -191,13 +193,13 @@ canopy/
     commands/              One file per CLI subcommand (23 commands)
   scripts/
     version-bump.ts        Atomic version management
-  .canopy/                 On-disk data store
+  .tane/                 On-disk data store
   .github/workflows/       CI + npm publish
 ```
 
 ## Part of os-eco
 
-Canopy is part of the [os-eco](https://github.com/jayminwest/os-eco) AI agent tooling ecosystem.
+Tane is part of the [os-eco](https://github.com/jayminwest/os-eco) AI agent tooling ecosystem.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/jayminwest/os-eco/main/branding/logo.png" alt="os-eco" width="444" />

@@ -15,8 +15,8 @@ Options:
 		return;
 	}
 
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	const allPromptRecords = await readJsonl<Prompt>(promptsPath);
 	const allSchemaRecords = await readJsonl<Schema>(schemasPath);
@@ -40,7 +40,7 @@ Options:
 			schemas: schemas.length,
 		});
 	} else {
-		humanOut(c.bold("Canopy Stats"));
+		humanOut(c.bold("Tane Stats"));
 		humanOut("");
 		humanOut("Prompts:");
 		humanOut(`  ${c.green(String(active))} active`);

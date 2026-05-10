@@ -7,10 +7,10 @@ import { humanOut, isQuiet, jsonOut } from "../output.ts";
 const CANDIDATE_FILES = ["CLAUDE.md", ".claude/CLAUDE.md", "AGENTS.md"] as const;
 
 function onboardSnippet(): string {
-	return `## Prompt Management (Canopy)
+	return `## Prompt Management (Tane)
 ${VERSION_MARKER}
 
-This project uses [Canopy](https://github.com/jayminwest/canopy) for git-native prompt management.
+This project uses [Tane](https://github.com/jayminwest/canopy) for git-native prompt management.
 
 **At the start of every session**, run:
 \`\`\`
@@ -24,7 +24,7 @@ This injects prompt workflow context: commands, conventions, and common workflow
 - \`cn render <name>\` — View rendered prompt (resolves inheritance)
 - \`cn emit --all\` — Render prompts to files
 - \`cn update <name>\` — Update a prompt (creates new version)
-- \`cn sync\` — Stage and commit .canopy/ changes
+- \`cn sync\` — Stage and commit .tane/ changes
 
 **Do not manually edit emitted files.** Use \`cn update\` to modify prompts, then \`cn emit\` to regenerate.`;
 }
@@ -43,7 +43,7 @@ export default async function onboard(args: string[], json: boolean): Promise<vo
 	if (args.includes("--help") || args.includes("-h")) {
 		humanOut(`Usage: cn onboard [options]
 
-Adds a canopy section to CLAUDE.md (or creates it) so AI agents discover prompt workflows.
+Adds a tane section to CLAUDE.md (or creates it) so AI agents discover prompt workflows.
 
 Options:
   --check     Report status without writing (missing, current, outdated)
@@ -98,7 +98,7 @@ Options:
 		if (json) {
 			jsonOut({ success: true, command: "onboard", action: "created", file: filePath });
 		} else {
-			humanOut(`Created ${filePath} with canopy section`);
+			humanOut(`Created ${filePath} with tane section`);
 		}
 		return;
 	}
@@ -110,7 +110,7 @@ Options:
 		if (json) {
 			jsonOut({ success: true, command: "onboard", action: "unchanged", file: filePath });
 		} else {
-			humanOut("Canopy section is already up to date");
+			humanOut("Tane section is already up to date");
 		}
 		return;
 	}
@@ -122,7 +122,7 @@ Options:
 			if (json) {
 				jsonOut({ success: true, command: "onboard", action: "updated", file: filePath });
 			} else {
-				humanOut(`Updated canopy section in ${filePath}`);
+				humanOut(`Updated tane section in ${filePath}`);
 			}
 		}
 		return;
@@ -134,14 +134,14 @@ Options:
 	if (json) {
 		jsonOut({ success: true, command: "onboard", action: "appended", file: filePath });
 	} else {
-		humanOut(`Added canopy section to ${filePath}`);
+		humanOut(`Added tane section to ${filePath}`);
 	}
 }
 
 export function registerOnboardCommand(program: Command): void {
 	program
 		.command("onboard")
-		.description("Add canopy section to CLAUDE.md for AI agent discovery")
+		.description("Add tane section to CLAUDE.md for AI agent discovery")
 		.option("--check", "Report status without writing (missing, current, outdated)")
 		.option("--stdout", "Print snippet to stdout without writing to file")
 		.action(async (opts: Record<string, unknown>) => {

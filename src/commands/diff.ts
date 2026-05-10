@@ -38,7 +38,7 @@ export function diffSections(fromSections: Section[], toSections: Section[]): Se
 
 export default async function diff(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
 
 	if (args.includes("--help") || args.includes("-h")) {
 		humanOut(`Usage: cn diff <name> <v1> <v2> [options]

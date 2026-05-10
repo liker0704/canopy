@@ -50,7 +50,7 @@ async function checkConfig(canopyDir: string): Promise<DoctorCheck> {
 		return {
 			name: "config",
 			status: "fail",
-			message: ".canopy/ directory not found",
+			message: ".tane/ directory not found",
 			details: [],
 			fixable: false,
 		};
@@ -65,7 +65,7 @@ async function checkConfig(canopyDir: string): Promise<DoctorCheck> {
 		};
 	}
 	try {
-		const cwd = canopyDir.replace(/\/.canopy$/, "");
+		const cwd = canopyDir.replace(/\/.tane$/, "");
 		const config = await loadConfig(cwd);
 		if (!config.project) {
 			return {
@@ -290,7 +290,7 @@ async function checkEmitStaleness(canopyDir: string): Promise<DoctorCheck> {
 		};
 	}
 
-	const cwd = canopyDir.replace(/\/.canopy$/, "");
+	const cwd = canopyDir.replace(/\/.tane$/, "");
 	const config = await loadConfig(cwd);
 
 	const allRecords = await readJsonl<Prompt>(promptsPath);
@@ -369,7 +369,7 @@ function checkStaleLocks(canopyDir: string): DoctorCheck {
 			}
 		}
 	} catch {
-		// .canopy/ might not be readable
+		// .tane/ might not be readable
 	}
 	if (details.length > 0) {
 		return {
@@ -509,7 +509,7 @@ function printCheck(check: DoctorCheck, verbose: boolean): void {
 
 export async function run(fix: boolean, verbose: boolean, json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const canopyDir = join(cwd, ".canopy");
+	const canopyDir = join(cwd, ".tane");
 
 	const checks: DoctorCheck[] = [];
 

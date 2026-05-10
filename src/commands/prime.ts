@@ -12,7 +12,7 @@ function defaultPrimeContent(compact: boolean): string {
 }
 
 function compactContent(): string {
-	return `# Canopy Quick Reference
+	return `# Tane Quick Reference
 
 \`\`\`
 cn list                   # List all prompts
@@ -23,7 +23,7 @@ cn emit --all             # Emit all active prompts
 cn create --name "..."    # Create a new prompt
 cn update <name>          # Update prompt (new version)
 cn import <path>          # Import existing .md as prompt
-cn sync                   # Stage + commit .canopy/
+cn sync                   # Stage + commit .tane/
 \`\`\`
 
 **Do not manually edit emitted files.** Use \`cn update\` to modify prompts.
@@ -31,12 +31,12 @@ cn sync                   # Stage + commit .canopy/
 }
 
 function fullContent(): string {
-	return `# Canopy Workflow Context
+	return `# Tane Workflow Context
 
 > **Context Recovery**: Run \`cn prime\` after compaction, clear, or new session
 
 ## Core Rules
-- **Storage**: Prompts live in \`.canopy/prompts.jsonl\` — never edit this file by hand
+- **Storage**: Prompts live in \`.tane/prompts.jsonl\` — never edit this file by hand
 - **Emit files are generated**: Do NOT manually edit files in the emit directory; use \`cn update\` instead
 - **Composition**: Prompts are composed via sections and inheritance, not duplicated
 - **Git-native**: JSONL storage is diffable/mergeable; \`merge=union\` gitattribute handles branch merges
@@ -73,7 +73,7 @@ function fullContent(): string {
 - \`cn unpin <name>\` — Remove version pin
 
 ### Sync
-- \`cn sync\` — Stage and commit .canopy/ changes
+- \`cn sync\` — Stage and commit .tane/ changes
 
 ## Common Workflows
 
@@ -101,7 +101,7 @@ cn sync                               # Commit changes
 
 **Importing from an existing file:**
 \`\`\`bash
-cn import path/to/prompt.md           # Import as canopy prompt
+cn import path/to/prompt.md           # Import as tane prompt
 cn emit <name>                        # Verify emit output
 \`\`\`
 `;
@@ -112,7 +112,7 @@ export default async function prime(args: string[], json: boolean): Promise<void
 		if (!isQuiet()) {
 			process.stdout.write(`Usage: cn prime [options]
 
-Outputs canopy workflow context for AI agent sessions.
+Outputs tane workflow context for AI agent sessions.
 
 Options:
   --compact   Output minimal quick-reference
@@ -137,16 +137,16 @@ Options:
 		return;
 	}
 
-	// Try to find .canopy dir for custom PRIME.md
+	// Try to find .tane dir for custom PRIME.md
 	let content: string | null = null;
 	try {
-		const canopyDir = join(process.cwd(), ".canopy");
+		const canopyDir = join(process.cwd(), ".tane");
 		const customFile = Bun.file(join(canopyDir, PRIME_FILE));
 		if (await customFile.exists()) {
 			content = await customFile.text();
 		}
 	} catch {
-		// No .canopy dir — that's fine, use default
+		// No .tane dir — that's fine, use default
 	}
 
 	if (!content) {

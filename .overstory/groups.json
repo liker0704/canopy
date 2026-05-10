@@ -1,9 +1,9 @@
 [
 	{
 		"id": "group-52598317",
-		"name": "canopy-full-build",
+		"name": "tane-full-build",
 		"memberIssueIds": [
-			"canopy-684"
+			"tane-684"
 		],
 		"status": "completed",
 		"createdAt": "2026-02-23T21:56:28.330Z",

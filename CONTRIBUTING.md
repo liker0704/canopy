@@ -1,14 +1,14 @@
-# Contributing to Canopy
+# Contributing to Tane
 
-Thanks for your interest in contributing to Canopy! This guide covers everything you need to get started.
+Thanks for your interest in contributing to Tane! This guide covers everything you need to get started.
 
 ## Getting Started
 
 1. **Fork** the repository on GitHub
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/canopy.git
-   cd canopy
+   git clone https://github.com/<your-username>/tane.git
+   cd tane
    ```
 3. **Install** dependencies:
    ```bash
@@ -38,13 +38,13 @@ bun test               # Run all tests (bun:test)
 bun test src/commands/create.test.ts  # Run a single test file
 ```
 
-There is no build step -- Canopy runs directly from TypeScript source via Bun.
+There is no build step -- Tane runs directly from TypeScript source via Bun.
 
 Always run `bun run lint` and `bun test` before submitting a PR.
 
 ## TypeScript Conventions
 
-Canopy is a zero-dependency, ESM-only TypeScript project running on Bun.
+Tane is a zero-dependency, ESM-only TypeScript project running on Bun.
 
 ### ESM Imports
 
@@ -80,7 +80,7 @@ describe("my-command", () => {
   let testDir: string;
 
   beforeEach(async () => {
-    testDir = await mkdtemp(join(tmpdir(), "canopy-test-"));
+    testDir = await mkdtemp(join(tmpdir(), "tane-test-"));
   });
 
   afterEach(async () => {

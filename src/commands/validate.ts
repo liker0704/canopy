@@ -8,8 +8,8 @@ import { validatePrompt } from "../validate.ts";
 
 export default async function validate(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
-	const schemasPath = join(cwd, ".canopy", "schemas.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
+	const schemasPath = join(cwd, ".tane", "schemas.jsonl");
 
 	const allMode = args.includes("--all");
 

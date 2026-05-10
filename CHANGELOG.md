@@ -1,3 +1,5 @@
+## [Unreleased] — Renamed to tane
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -11,17 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Multi-inheritance / mixin support** — prompts can now compose from multiple parents via `mixins` in addition to single `extends` inheritance
-  - `--mixin <name>` flag on `cn create` (repeatable) for adding mixins at creation time
-  - `--mixin <name>` and `--remove-mixin <name>` flags on `cn update` (repeatable) for managing mixins
-  - `--mixin <name>` filter on `cn list` for finding prompts that use a specific mixin
+  - `--mixin <name>` flag on `ta create` (repeatable) for adding mixins at creation time
+  - `--mixin <name>` and `--remove-mixin <name>` flags on `ta update` (repeatable) for managing mixins
+  - `--mixin <name>` filter on `ta list` for finding prompts that use a specific mixin
   - `mixins` field on the `Prompt` type
   - Resolution order: extends chain → mixins (left-to-right) → focal prompt; later entries override earlier on section name conflicts
   - Frontmatter merges across extends, mixins, and focal prompt
   - Circular reference detection covers mixin graphs
   - Mixins with their own extends chains are fully resolved before merging
-- `cn tree` shows mixin relationships — focal prompt displays its mixins, children show theirs
-- `cn tree --json` includes `mixins` and `mixinUsers` fields
-- `cn doctor` inheritance check now validates mixin chains
+- `ta tree` shows mixin relationships — focal prompt displays its mixins, children show theirs
+- `ta tree --json` includes `mixins` and `mixinUsers` fields
+- `ta doctor` inheritance check now validates mixin chains
 - 10 new tests for mixin resolution (section merging, override precedence, frontmatter merging, circular detection, extends+mixin combinations)
 
 ## [0.2.2] - 2026-03-05
@@ -51,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.1] - 2026-03-03
 
 ### Added
-- **TypeScript emit support** — when `emitAs` is set to a `.ts` filename, `cn emit` renders a TypeScript module (`export const NAME = \`...\``) instead of markdown
+- **TypeScript emit support** — when `emitAs` is set to a `.ts` filename, `ta emit` renders a TypeScript module (`export const NAME = \`...\``) instead of markdown
   - `toExportName()` converts prompt names to `UPPER_SNAKE_CASE` export names
   - `escapeTemplateLiteral()` escapes backticks, `${...}` expressions, and backslashes in template literals
   - Frontmatter is excluded from `.ts` output (TypeScript exports are pure prompt content)
@@ -63,13 +65,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Frontmatter support** — full YAML frontmatter lifecycle for prompts:
   - `frontmatter` field on `Prompt` type and `RenderResult`
-  - `--fm <key=value>` flag on `cn create` and `cn update` (repeatable) for setting frontmatter fields
-  - `--remove-fm <key>` flag on `cn update` (repeatable) for removing frontmatter fields
+  - `--fm <key=value>` flag on `ta create` and `ta update` (repeatable) for setting frontmatter fields
+  - `--remove-fm <key>` flag on `ta update` (repeatable) for removing frontmatter fields
   - `src/frontmatter.ts` module — YAML frontmatter extraction and rendering
   - Frontmatter merging in render engine (child inherits parent frontmatter, can override)
-  - `cn import` extracts YAML frontmatter from markdown files (maps `description` to prompt field, stores rest as frontmatter)
-  - `cn show` and `cn render` display frontmatter fields
-  - `cn emit` includes YAML frontmatter block in output files (name, description, and custom fields)
+  - `ta import` extracts YAML frontmatter from markdown files (maps `description` to prompt field, stores rest as frontmatter)
+  - `ta show` and `ta render` display frontmatter fields
+  - `ta emit` includes YAML frontmatter block in output files (name, description, and custom fields)
 - Tests for frontmatter module (frontmatter.test.ts) and render engine frontmatter merging (render.test.ts)
 - Tests for frontmatter in emit pipeline (emit.test.ts)
 
@@ -84,14 +86,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.9] - 2026-02-25
 
 ### Added
-- `cn completions <bash|zsh|fish>` command — generates shell completion scripts for bash, zsh, and fish
+- `ta completions <bash|zsh|fish>` command — generates shell completion scripts for bash, zsh, and fish
 - `--timing` global flag — shows command execution time on stderr (e.g., `[timing] 42ms`)
-- Typo suggestions for unknown commands — suggests closest match via Levenshtein distance (e.g., `cn crate` → "Did you mean 'create'?")
+- Typo suggestions for unknown commands — suggests closest match via Levenshtein distance (e.g., `ta crate` → "Did you mean 'create'?")
 
 ## [0.1.8] - 2026-02-25
 
 ### Added
-- Per-prompt `--emit-dir` flag on `cn create` and `cn update` — routes individual prompts to a custom output directory
+- Per-prompt `--emit-dir` flag on `ta create` and `ta update` — routes individual prompts to a custom output directory
 - Tag-based emit routing via `emitDirByTag` config — map tags to output directories (e.g., `slash-command: .claude/commands`)
 - `resolveEmitDir()` function in `emit.ts` — centralizes emit directory resolution with priority: per-prompt > tag-based > global > default
 - One-level nested map support in YAML parser (`parseYaml` / `serializeYaml`) for `emitDirByTag` config
@@ -99,8 +101,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests for nested YAML parsing and serialization (8 tests)
 
 ### Changed
-- `cn emit` now resolves output directory per-prompt instead of using a single global directory
-- `cn doctor` emit staleness check respects per-prompt routing
+- `ta emit` now resolves output directory per-prompt instead of using a single global directory
+- `ta doctor` emit staleness check respects per-prompt routing
 - YAML parser upgraded from flat key-value only to support one-level nested maps
 
 ## [0.1.7] - 2026-02-25
@@ -119,8 +121,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.6] - 2026-02-24
 
 ### Added
-- `cn doctor` command — checks project health and data integrity (config, JSONL integrity, schema validation, inheritance chains, emit staleness, stale locks, version sync) with `--fix` and `--verbose` flags
-- `cn upgrade` command — upgrades canopy to the latest npm version (`--check` for dry-run)
+- `ta doctor` command — checks project health and data integrity (config, JSONL integrity, schema validation, inheritance chains, emit staleness, stale locks, version sync) with `--fix` and `--verbose` flags
+- `ta upgrade` command — upgrades tane to the latest npm version (`--check` for dry-run)
 - Global `--quiet` / `-q` flag — suppresses non-error output across all commands
 - Global `--verbose` flag — enables extra diagnostic output
 - Rich `--version --json` output — returns name, version, runtime, and platform metadata
@@ -132,7 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Brand palette in `output.ts` (`palette.brand`, `palette.accent`, `palette.muted`) with deep green, amber, and stone gray colors
 - Status icons (`icons.pending`, `icons.active`, `icons.done`, `icons.blocked`) for terminal-compatible list indicators
 - Message format helpers (`fmt.success`, `fmt.error`, `fmt.warning`, `fmt.id`, `fmt.info`) for consistent CLI output
-- Style A custom help screen on `cn --help` with brand colors, structured command listing, and argument display
+- Style A custom help screen on `ta --help` with brand colors, structured command listing, and argument display
 
 ### Changed
 - All 12 command files migrated from inline color calls to `fmt.*` / `icons.*` helpers for consistent visual output
@@ -142,22 +144,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.4] - 2026-02-24
 
 ### Added
-- `--add-section` and `--remove-section` flags are now repeatable in `cn update` — add/remove multiple sections in a single command
+- `--add-section` and `--remove-section` flags are now repeatable in `ta update` — add/remove multiple sections in a single command
 
 ### Fixed
 - `--remove-section` splices section out entirely for non-inheriting prompts (previously set empty body for all prompts)
-- `cn init` checks for canopy-specific path in `.gitattributes` instead of broad `merge=union` string (avoids skipping setup when other tools already have merge=union)
+- `ta init` checks for tane-specific path in `.gitattributes` instead of broad `merge=union` string (avoids skipping setup when other tools already have merge=union)
 - `package.json` formatted for biome 2.4.4 compatibility
 
 ### Changed
-- Package renamed to `@os-eco/canopy-cli` with npm publish config (`main`, `files`, `publishConfig`)
+- Package renamed to `@hana/tane-cli` with npm publish config (`main`, `files`, `publishConfig`)
 - CI: replaced auto-tag workflow with npm publish workflow (version-check, publish with provenance, auto-tag, GitHub release)
 
 ## [0.1.3] - 2026-02-24
 
 ### Added
-- `cn prime` command — outputs workflow context for AI agent sessions (`--compact`, `--export`, custom `PRIME.md` support)
-- `cn onboard` command — adds canopy section to CLAUDE.md for AI agent discovery (`--check`, `--stdout`)
+- `ta prime` command — outputs workflow context for AI agent sessions (`--compact`, `--export`, custom `PRIME.md` support)
+- `ta onboard` command — adds tane section to CLAUDE.md for AI agent discovery (`--check`, `--stdout`)
 - `src/markers.ts` — marker-based section management for CLAUDE.md onboarding (start/end markers, version detection, replace)
 - `chalk` dependency for colorized terminal output with automatic `NO_COLOR` and TTY detection
 - `commander` dependency for structured CLI argument parsing
@@ -168,11 +170,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/index.ts` rewritten: Commander-based entry point with typed options, replaces manual `switch` dispatch
 - `src/output.ts` now uses chalk for color helpers (`c.bold`, `c.dim`, `c.green`, `c.red`, `c.yellow`, `c.cyan`, `c.blue`)
 - No longer zero-dependency — chalk and commander are now runtime dependencies
-- CLAUDE.md updated with canopy onboarding section
+- CLAUDE.md updated with tane onboarding section
 
 ### Fixed
-- `--body` support wired into `--add-section` for `cn update` command (body was declared but never assigned)
-- `cn import` now preserves original section heading casing (was lowercasing)
+- `--body` support wired into `--add-section` for `ta update` command (body was declared but never assigned)
+- `ta import` now preserves original section heading casing (was lowercasing)
 - `Record<string, unknown>` type annotations added to Commander action `opts` params (fixes TypeScript strict mode)
 
 ### Removed
@@ -182,14 +184,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `--help` / `-h` flag on all subcommands (archive, create, diff, emit, history, import, init, list, pin, unpin, render, schema, show, stats, sync, tree, update, validate)
-- `--description` flag for `cn create` and `cn update`
+- `--description` flag for `ta create` and `ta update`
 - `description` field on the `Prompt` type
-- `cn show` displays description when present
+- `ta show` displays description when present
 - README with full CLI reference, composition model docs, and development guide
 
 ### Fixed
 - All remaining `process.exit()` calls replaced with `ExitError` (prevents error duplication in lock-guarded blocks)
-- `cn import` now splits on `##` headings by default (`--no-split` to disable, replacing `--split`)
+- `ta import` now splits on `##` headings by default (`--no-split` to disable, replacing `--split`)
 - Unused import cleanup (`dedupById` in diff.ts, `Section` in update.ts, `errorOut` in list.ts, `join` in sync.ts)
 - Import statement ordering to satisfy Biome linter
 
@@ -200,16 +202,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2026-02-23
 
 ### Added
-- `--section name=body` shorthand for `cn create` and `cn update`
+- `--section name=body` shorthand for `ta create` and `ta update`
 - `ExitError` class for safe error exits inside lock-guarded blocks
 - Open source governance: LICENSE (MIT), CONTRIBUTING.md, SECURITY.md, CODEOWNERS
 - GitHub templates: bug report, feature request, PR template, dependabot, funding
 - Package metadata: description, keywords, author, license, repository, engines
 
 ### Fixed
-- `cn emit --check` now implies `--all` (previously required both flags)
-- `cn emit` resolves pinned versions correctly (uses full record history)
-- `cn schema create` accumulates `--required`/`--optional` sections instead of replacing
+- `ta emit --check` now implies `--all` (previously required both flags)
+- `ta emit` resolves pinned versions correctly (uses full record history)
+- `ta schema create` accumulates `--required`/`--optional` sections instead of replacing
 - Lock files are always released on error (ExitError replaces `process.exit` in guarded blocks)
 
 ### Changed
@@ -219,22 +221,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release
-- Prompt CRUD (`cn create`, `cn show`, `cn list`, `cn update`, `cn archive`)
+- Prompt CRUD (`ta create`, `ta show`, `ta list`, `ta update`, `ta archive`)
 - Section-based composition with single inheritance (`extends`)
 - Section removal via empty body override
-- Version history with structured diffing (`cn history`, `cn diff`)
-- Version pinning (`cn pin`, `cn unpin`)
+- Version history with structured diffing (`ta history`, `ta diff`)
+- Version pinning (`ta pin`, `ta unpin`)
 - Schema validation with required sections and regex rules
-  (`cn schema create/show/list/rule`, `cn validate`)
-- Emit to plain `.md` files (`cn emit`, `cn emit --all`, `cn emit --check`)
-- Import from existing `.md` files with auto-split by `##` headings (`cn import`)
-- Inheritance tree visualization (`cn tree`)
-- Project statistics (`cn stats`)
+  (`ta schema create/show/list/rule`, `ta validate`)
+- Emit to plain `.md` files (`ta emit`, `ta emit --all`, `ta emit --check`)
+- Import from existing `.md` files with auto-split by `##` headings (`ta import`)
+- Inheritance tree visualization (`ta tree`)
+- Project statistics (`ta stats`)
 - Advisory file locking for concurrent access (30s stale, 5s timeout, 50ms retry)
 - Atomic writes with dedup-on-read (highest version per ID wins)
 - YAML config (`config.yaml`), JSONL storage (`prompts.jsonl`, `schemas.jsonl`)
 - `merge=union` gitattributes for parallel branch merges
-- `cn sync` — stage and commit `.canopy/` changes
+- `ta sync` — stage and commit `.tane/` changes
 - `--json` flag on all commands for structured output
 - Zero runtime dependencies (Bun built-ins only)
 - `scripts/version-bump.ts` for atomic version management

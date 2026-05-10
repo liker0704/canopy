@@ -8,7 +8,7 @@ import { ExitError } from "../types.ts";
 
 export default async function renderCmd(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
 
 	if (args.includes("--help") || args.includes("-h")) {
 		humanOut(`Usage: cn render <name>[@version] [options]

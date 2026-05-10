@@ -54,7 +54,7 @@ describe("cn pin", () => {
 			// Create prompt (version 1), then create version 2 via a store append
 			await captureOutput(() => create(["--name", "my-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const p = current.find((x) => x.name === "my-prompt");
@@ -89,7 +89,7 @@ describe("cn pin", () => {
 		try {
 			await captureOutput(() => create(["--name", "json-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const p = current.find((x) => x.name === "json-prompt");
@@ -215,7 +215,7 @@ describe("cn unpin", () => {
 		try {
 			await captureOutput(() => create(["--name", "pinned-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const p = current.find((x) => x.name === "pinned-prompt");
@@ -246,7 +246,7 @@ describe("cn unpin", () => {
 		try {
 			await captureOutput(() => create(["--name", "up-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const p = current.find((x) => x.name === "up-prompt");
@@ -305,7 +305,7 @@ describe("cn unpin", () => {
 		try {
 			await captureOutput(() => create(["--name", "persist-prompt"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const p = current.find((x) => x.name === "persist-prompt");

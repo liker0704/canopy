@@ -124,7 +124,7 @@ describe("cn show", () => {
 			await captureOutput(() => create(["--name", "versioned", "--json"], true));
 
 			// Append a second version
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const prompt = current.find((p) => p.name === "versioned");
@@ -180,7 +180,7 @@ describe("cn show", () => {
 			await captureOutput(() => create(["--name", "sectioned", "--json"], true));
 
 			// Add sections manually
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const records = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(records);
 			const prompt = current.find((p) => p.name === "sectioned");

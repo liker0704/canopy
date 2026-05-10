@@ -38,7 +38,7 @@ export function isJsonMode(args: string[]): boolean {
 // Brand palette — chalk instances (supports chaining e.g. palette.brand.bold(...))
 // chalk handles NO_COLOR and TTY detection automatically
 export const palette = {
-	brand: chalk.rgb(56, 142, 60), // Canopy deep green
+	brand: chalk.rgb(56, 142, 60), // Tane deep green
 	accent: chalk.rgb(255, 183, 77), // amber — IDs and accents
 	muted: chalk.rgb(120, 120, 110), // stone gray — metadata
 };

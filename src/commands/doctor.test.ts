@@ -44,7 +44,7 @@ afterEach(() => {
 });
 
 describe("cn doctor", () => {
-	it("all checks pass on a valid .canopy/ directory", async () => {
+	it("all checks pass on a valid .tane/ directory", async () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
@@ -60,7 +60,7 @@ describe("cn doctor", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			rmSync(join(tmpDir, ".canopy", "config.yaml"));
+			rmSync(join(tmpDir, ".tane", "config.yaml"));
 			const { stdout } = await captureOutput(() => run(false, true, false));
 			expect(stdout).toContain("config.yaml is missing");
 		} finally {
@@ -72,10 +72,10 @@ describe("cn doctor", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			await Bun.write(
 				promptsPath,
-				'{"id":"canopy-0001","name":"test","version":1,"sections":[],"status":"active","createdAt":"2024-01-01","updatedAt":"2024-01-01"}\nBAD LINE\n',
+				'{"id":"tane-0001","name":"test","version":1,"sections":[],"status":"active","createdAt":"2024-01-01","updatedAt":"2024-01-01"}\nBAD LINE\n',
 			);
 			const { stdout } = await captureOutput(() => run(false, true, false));
 			expect(stdout).toContain("malformed line");
@@ -88,7 +88,7 @@ describe("cn doctor", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			const lockPath = join(tmpDir, ".canopy", "prompts.jsonl.lock");
+			const lockPath = join(tmpDir, ".tane", "prompts.jsonl.lock");
 			const fd = openSync(lockPath, constants.O_CREAT | constants.O_WRONLY);
 			closeSync(fd);
 			// Make it appear old (60 seconds ago)
@@ -148,7 +148,7 @@ describe("cn doctor", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			const schemasPath = join(tmpDir, ".canopy", "schemas.jsonl");
+			const schemasPath = join(tmpDir, ".tane", "schemas.jsonl");
 			await Bun.write(schemasPath, "NOT JSON\n");
 			const { stdout } = await captureOutput(() => run(false, true, false));
 			expect(stdout).toContain("malformed line");
@@ -162,9 +162,9 @@ describe("cn doctor", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const record = {
-				id: "canopy-0001",
+				id: "tane-0001",
 				name: "child",
 				version: 1,
 				sections: [],

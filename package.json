@@ -1,10 +1,10 @@
 {
-	"name": "@os-eco/canopy-cli",
+	"name": "@hana/tane-cli",
 	"version": "0.2.3",
 	"description": "Git-native prompt management for AI agent workflows",
 	"type": "module",
 	"bin": {
-		"cn": "src/index.ts"
+		"ta": "src/index.ts"
 	},
 	"main": "src/index.ts",
 	"files": [

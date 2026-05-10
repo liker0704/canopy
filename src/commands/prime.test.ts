@@ -59,7 +59,7 @@ describe("cn prime", () => {
 		process.chdir(tmpDir);
 		try {
 			const { stdout } = await captureOutput(() => prime([], false));
-			expect(stdout).toContain("Canopy Workflow Context");
+			expect(stdout).toContain("Tane Workflow Context");
 			expect(stdout).toContain("Essential Commands");
 			expect(stdout).toContain("cn list");
 			expect(stdout).toContain("cn render");
@@ -74,7 +74,7 @@ describe("cn prime", () => {
 		process.chdir(tmpDir);
 		try {
 			const { stdout } = await captureOutput(() => prime(["--compact"], false));
-			expect(stdout).toContain("Canopy Quick Reference");
+			expect(stdout).toContain("Tane Quick Reference");
 			expect(stdout).not.toContain("Common Workflows");
 		} finally {
 			process.chdir(origCwd);
@@ -89,7 +89,7 @@ describe("cn prime", () => {
 			const parsed = JSON.parse(stdout.trim());
 			expect(parsed.success).toBe(true);
 			expect(parsed.command).toBe("prime");
-			expect(parsed.content).toContain("Canopy Workflow Context");
+			expect(parsed.content).toContain("Tane Workflow Context");
 		} finally {
 			process.chdir(origCwd);
 		}
@@ -99,9 +99,9 @@ describe("cn prime", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			await Bun.write(join(tmpDir, ".canopy", "PRIME.md"), "custom prime content");
+			await Bun.write(join(tmpDir, ".tane", "PRIME.md"), "custom prime content");
 			const { stdout } = await captureOutput(() => prime(["--export"], false));
-			expect(stdout).toContain("Canopy Workflow Context");
+			expect(stdout).toContain("Tane Workflow Context");
 			expect(stdout).not.toContain("custom prime content");
 		} finally {
 			process.chdir(origCwd);
@@ -112,7 +112,7 @@ describe("cn prime", () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 		try {
-			await Bun.write(join(tmpDir, ".canopy", "PRIME.md"), "my custom agent context");
+			await Bun.write(join(tmpDir, ".tane", "PRIME.md"), "my custom agent context");
 			const { stdout } = await captureOutput(() => prime([], false));
 			expect(stdout).toBe("my custom agent context");
 		} finally {
@@ -142,20 +142,20 @@ describe("cn prime", () => {
 			const { stdout } = await captureOutput(() => prime(["--export"], true));
 			const parsed = JSON.parse(stdout.trim());
 			expect(parsed.success).toBe(true);
-			expect(parsed.content).toContain("Canopy Workflow Context");
+			expect(parsed.content).toContain("Tane Workflow Context");
 		} finally {
 			process.chdir(origCwd);
 		}
 	});
 
-	it("works without .canopy/ initialized", async () => {
+	it("works without .tane/ initialized", async () => {
 		const noInitDir = join(tmpDir, "no-init");
 		mkdirSync(noInitDir, { recursive: true });
 		const origCwd = process.cwd();
 		process.chdir(noInitDir);
 		try {
 			const { stdout } = await captureOutput(() => prime([], false));
-			expect(stdout).toContain("Canopy Workflow Context");
+			expect(stdout).toContain("Tane Workflow Context");
 		} finally {
 			process.chdir(origCwd);
 		}

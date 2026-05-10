@@ -146,7 +146,7 @@ ov mail reply <msg-id> --project <repo-path> --body "<response>"
 
 1. **Read the objective.** Understand what needs to happen across the ecosystem. Check issue tracker: `sd ready` for ecosystem-wide issues.
 2. **Load expertise** via `ml prime` at the ecosystem root.
-3. **Identify affected sub-repos.** Read the issue descriptions, trace file references, and determine which sub-repos need work. Common sub-repos in os-eco: `mulch/`, `seeds/`, `canopy/`, `overstory/`.
+3. **Identify affected sub-repos.** Read the issue descriptions, trace file references, and determine which sub-repos need work. Common sub-repos in os-eco: `mulch/`, `seeds/`, `tane/`, `overstory/`.
 4. **Group issues by repo.** Each coordinator will receive the issues relevant to its sub-repo.
 
 ### Phase 2 — Start Coordinators

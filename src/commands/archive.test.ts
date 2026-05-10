@@ -119,7 +119,7 @@ describe("cn archive", () => {
 			await captureOutput(() => create(["--name", "state-check"], false));
 			await captureOutput(() => archive(["state-check"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const allRecords = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(allRecords);
 			const prompt = current.find((p) => p.name === "state-check");
@@ -140,7 +140,7 @@ describe("cn archive", () => {
 			await captureOutput(() => archive(["unarchive-me"], false));
 			await captureOutput(() => update(["unarchive-me", "--status", "active"], false));
 
-			const promptsPath = join(tmpDir, ".canopy", "prompts.jsonl");
+			const promptsPath = join(tmpDir, ".tane", "prompts.jsonl");
 			const allRecords = await readJsonl<Prompt>(promptsPath);
 			const current = dedupById(allRecords);
 			const prompt = current.find((p) => p.name === "unarchive-me");

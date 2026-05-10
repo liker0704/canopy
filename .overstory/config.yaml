@@ -2,8 +2,8 @@
 # See: https://github.com/overstory/overstory
 
 project:
-  name: canopy
-  root: /Users/jayminwest/Projects/os-eco/canopy
+  name: tane
+  root: /Users/jayminwest/Projects/os-eco/tane
   canonicalBranch: main
   qualityGates:
     - name: Tests

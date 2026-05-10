@@ -3,13 +3,13 @@ import type { Config, EmitTarget } from "./types.ts";
 import { parseYaml, serializeYaml, type YamlMap } from "./yaml.ts";
 
 export async function loadConfig(dir: string): Promise<Config> {
-	const configPath = join(dir, ".canopy", "config.yaml");
+	const configPath = join(dir, ".tane", "config.yaml");
 
 	try {
 		const text = await Bun.file(configPath).text();
 		const parsed = parseYaml(text);
 
-		const project = typeof parsed.project === "string" ? parsed.project : "canopy";
+		const project = typeof parsed.project === "string" ? parsed.project : "tane";
 		const version = typeof parsed.version === "string" ? parsed.version : "1";
 
 		const config: Config = { project, version };
@@ -79,14 +79,14 @@ export async function loadConfig(dir: string): Promise<Config> {
 	} catch {
 		// Return defaults if config doesn't exist
 		return {
-			project: "canopy",
+			project: "tane",
 			version: "1",
 		};
 	}
 }
 
 export async function saveConfig(dir: string, config: Config): Promise<void> {
-	const configPath = join(dir, ".canopy", "config.yaml");
+	const configPath = join(dir, ".tane", "config.yaml");
 
 	const obj: YamlMap = {
 		project: config.project,

@@ -1,7 +1,7 @@
 version: '1'
 domains:
   - cicd
-  - canopy
+  - tane
   - architecture
 governance:
   max_entries: 100

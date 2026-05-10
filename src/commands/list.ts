@@ -6,7 +6,7 @@ import type { Prompt } from "../types.ts";
 
 export default async function list(args: string[], json: boolean): Promise<void> {
 	const cwd = process.cwd();
-	const promptsPath = join(cwd, ".canopy", "prompts.jsonl");
+	const promptsPath = join(cwd, ".tane", "prompts.jsonl");
 
 	if (args.includes("--help") || args.includes("-h")) {
 		humanOut(`Usage: cn list [options]

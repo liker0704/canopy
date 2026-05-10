@@ -1,4 +1,4 @@
-# Canopy
+# Tane
 
 Git-native prompt management for AI agent workflows. Minimal dependencies, JSONL storage, Bun runtime.
 
@@ -6,13 +6,13 @@ Git-native prompt management for AI agent workflows. Minimal dependencies, JSONL
 
 - **Runtime:** Bun (TypeScript)
 - **Storage:** JSONL files (one per record type)
-- **CLI prefix:** `cn`
+- **CLI prefix:** `ta`
 - **Spec:** See `SPEC.md` for full design
 
 ## Project Structure
 
 ```
-.canopy/           # On-disk data (prompts.jsonl, schemas.jsonl, config.yaml)
+.tane/           # On-disk data (prompts.jsonl, schemas.jsonl, config.yaml)
 src/               # Source code (Bun/TypeScript)
 SPEC.md            # Detailed specification
 ```
@@ -24,7 +24,7 @@ SPEC.md            # Detailed specification
 - Git-native: JSONL is diffable/mergeable, `merge=union` gitattribute
 - All CLI commands support `--json` flag
 - Prompts are composed via sections and inheritance, not duplicated
-- `cn emit` renders to plain `.md` (or `.ts` when `emitAs` ends in `.ts`) for downstream consumption
+- `ta emit` renders to plain `.md` (or `.ts` when `emitAs` ends in `.ts`) for downstream consumption
 
 <!-- mulch:start -->
 ## Project Expertise (Mulch)
@@ -93,25 +93,25 @@ This injects session context: rules, command reference, and workflows.
 3. Sync and push: `sd sync && git push`
 <!-- seeds:end -->
 
-<!-- canopy:start -->
-## Prompt Management (Canopy)
-<!-- canopy-onboard-v:1 -->
+<!-- tane:start -->
+## Prompt Management (Tane)
+<!-- tane-onboard-v:1 -->
 
-This project uses [Canopy](https://github.com/jayminwest/canopy) for git-native prompt management.
+This project uses [Tane](https://github.com/jayminwest/canopy) for git-native prompt management.
 
 **At the start of every session**, run:
 ```
-cn prime
+ta prime
 ```
 
 This injects prompt workflow context: commands, conventions, and common workflows.
 
 **Quick reference:**
-- `cn list` — List all prompts
-- `cn render <name>` — View rendered prompt (resolves inheritance)
-- `cn emit --all` — Render prompts to files
-- `cn update <name>` — Update a prompt (creates new version)
-- `cn sync` — Stage and commit .canopy/ changes
+- `ta list` — List all prompts
+- `ta render <name>` — View rendered prompt (resolves inheritance)
+- `ta emit --all` — Render prompts to files
+- `ta update <name>` — Update a prompt (creates new version)
+- `ta sync` — Stage and commit .tane/ changes
 
-**Do not manually edit emitted files.** Use `cn update` to modify prompts, then `cn emit` to regenerate.
-<!-- canopy:end -->
+**Do not manually edit emitted files.** Use `ta update` to modify prompts, then `ta emit` to regenerate.
+<!-- tane:end -->

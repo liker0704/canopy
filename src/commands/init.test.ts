@@ -44,18 +44,18 @@ afterEach(() => {
 });
 
 describe("cn init", () => {
-	it("creates .canopy/ directory and files", async () => {
+	it("creates .tane/ directory and files", async () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 
 		try {
 			const { stdout } = await captureOutput(() => init([], false));
 			expect(stdout).toContain("Initialized");
-			expect(existsSync(join(tmpDir, ".canopy"))).toBe(true);
-			expect(existsSync(join(tmpDir, ".canopy", "config.yaml"))).toBe(true);
-			expect(existsSync(join(tmpDir, ".canopy", "prompts.jsonl"))).toBe(true);
-			expect(existsSync(join(tmpDir, ".canopy", "schemas.jsonl"))).toBe(true);
-			expect(existsSync(join(tmpDir, ".canopy", ".gitignore"))).toBe(true);
+			expect(existsSync(join(tmpDir, ".tane"))).toBe(true);
+			expect(existsSync(join(tmpDir, ".tane", "config.yaml"))).toBe(true);
+			expect(existsSync(join(tmpDir, ".tane", "prompts.jsonl"))).toBe(true);
+			expect(existsSync(join(tmpDir, ".tane", "schemas.jsonl"))).toBe(true);
+			expect(existsSync(join(tmpDir, ".tane", ".gitignore"))).toBe(true);
 		} finally {
 			process.chdir(origCwd);
 		}
@@ -82,14 +82,14 @@ describe("cn init", () => {
 		try {
 			await captureOutput(() => init([], false));
 			const gitattrs = await Bun.file(join(tmpDir, ".gitattributes")).text();
-			expect(gitattrs).toContain(".canopy/prompts.jsonl merge=union");
-			expect(gitattrs).toContain(".canopy/schemas.jsonl merge=union");
+			expect(gitattrs).toContain(".tane/prompts.jsonl merge=union");
+			expect(gitattrs).toContain(".tane/schemas.jsonl merge=union");
 		} finally {
 			process.chdir(origCwd);
 		}
 	});
 
-	it("still appends canopy entries when another tool's merge=union is already present", async () => {
+	it("still appends tane entries when another tool's merge=union is already present", async () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 
@@ -101,8 +101,8 @@ describe("cn init", () => {
 			);
 			await captureOutput(() => init([], false));
 			const gitattrs = await Bun.file(join(tmpDir, ".gitattributes")).text();
-			expect(gitattrs).toContain(".canopy/prompts.jsonl merge=union");
-			expect(gitattrs).toContain(".canopy/schemas.jsonl merge=union");
+			expect(gitattrs).toContain(".tane/prompts.jsonl merge=union");
+			expect(gitattrs).toContain(".tane/schemas.jsonl merge=union");
 		} finally {
 			process.chdir(origCwd);
 		}
@@ -114,9 +114,9 @@ describe("cn init", () => {
 
 		try {
 			await captureOutput(() => init([], false));
-			const configText = await Bun.file(join(tmpDir, ".canopy", "config.yaml")).text();
+			const configText = await Bun.file(join(tmpDir, ".tane", "config.yaml")).text();
 			const parsed = parseYaml(configText);
-			expect(parsed.project).toBe("canopy");
+			expect(parsed.project).toBe("tane");
 			expect(parsed.version).toBe("1");
 			// Should have targets, not emitDir
 			expect(parsed.targets).toBeDefined();
@@ -130,7 +130,7 @@ describe("cn init", () => {
 		}
 	});
 
-	it("fails if .canopy/ already exists", async () => {
+	it("fails if .tane/ already exists", async () => {
 		const origCwd = process.cwd();
 		process.chdir(tmpDir);
 

@@ -18,7 +18,7 @@ if (rawArgs.includes("--quiet") || rawArgs.includes("-q")) {
 // --version --json: rich metadata output (before Commander processes version flag)
 if ((rawArgs.includes("-v") || rawArgs.includes("--version")) && rawArgs.includes("--json")) {
 	const platform = `${process.platform}-${process.arch}`;
-	jsonOut({ name: "@os-eco/canopy-cli", version: VERSION, runtime: "bun", platform });
+	jsonOut({ name: "@hana/tane-cli", version: VERSION, runtime: "bun", platform });
 	if (rawArgs.includes("--timing")) {
 		const elapsed = Math.round(performance.now() - t0);
 		process.stderr.write(`[timing] ${elapsed}ms\n`);
@@ -28,7 +28,7 @@ if ((rawArgs.includes("-v") || rawArgs.includes("--version")) && rawArgs.include
 
 const program = new Command();
 program
-	.name("cn")
+	.name("ta")
 	.description("Prompt management & composition")
 	.version(VERSION, "-v, --version", "Show version")
 	.option("-q, --quiet", "Suppress non-error output")
@@ -40,7 +40,7 @@ program
 			if (cmd.parent) {
 				return Help.prototype.formatHelp.call(helper, cmd, helper);
 			}
-			const header = `${palette.brand(chalk.bold("canopy"))} ${palette.muted(`v${VERSION}`)} — Prompt management & composition\n\nUsage: cn <command> [options]`;
+			const header = `${palette.brand(chalk.bold("tane"))} ${palette.muted(`v${VERSION}`)} — Prompt management & composition\n\nUsage: ta <command> [options]`;
 
 			const cmdLines: string[] = ["\nCommands:"];
 			for (const sub of cmd.commands) {
